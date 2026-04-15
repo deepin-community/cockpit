@@ -1,0 +1,48 @@
+Description: Fix CVE-2026-4631: SSH injection vulnerability in remote login
+ Cockpit's remote login feature passes user-supplied hostnames and usernames
+ from the web interface to the SSH client without validation or sanitization.
+ An attacker with network access to the Cockpit web service can craft a single
+ HTTP request to the login endpoint that injects malicious SSH options or shell
+ commands, achieving code execution on the Cockpit host without valid credentials.
+ .
+ This patch adds `--` to SSH command invocations to ensure hostnames are
+ interpreted correctly and cannot be treated as command-line options.
+Author: Allison Karlitskaya <allison.karlitskaya@redhat.com>
+Origin: upstream, https://github.com/cockpit-project/cockpit/commit/9d0695647cb6f6209e68231fd165917123aa502d
+Bug: https://security-tracker.debian.org/tracker/CVE-2026-4631
+Bug-Debian: https://bugs.debian.org/1133022
+Forwarded: not-needed
+---
+ src/cockpit/beiboot.py | 4 ++--
+ src/ws/cockpitauth.c   | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+Index: github-cockpit-CVE-2026-4631/src/cockpit/beiboot.py
+===================================================================
+--- github-cockpit-CVE-2026-4631.orig/src/cockpit/beiboot.py
++++ github-cockpit-CVE-2026-4631/src/cockpit/beiboot.py
+@@ -263,9 +263,9 @@ def via_ssh(cmd: Sequence[str], dest: st
+         # strip off [] IPv6 brackets
+         if host.startswith('[') and host.endswith(']'):
+             host = host[1:-1]
+-        destination = ['-p', port, host]
++        destination = ['-p', port, '--', host]
+     else:
+-        destination = [dest]
++        destination = ['--', dest]
+ 
+     return (
+         'ssh', *ssh_opts, *destination, shlex.join(cmd)
+Index: github-cockpit-CVE-2026-4631/src/ws/cockpitauth.c
+===================================================================
+--- github-cockpit-CVE-2026-4631.orig/src/ws/cockpitauth.c
++++ github-cockpit-CVE-2026-4631/src/ws/cockpitauth.c
+@@ -51,7 +51,7 @@
+ 
+ /* we only support beibooting machines with a known/vetted OS, as it's impossible to guarantee
+  * forward compatibility for all pages */
+-const gchar *cockpit_ws_ssh_program = "/usr/bin/env python3 -m cockpit.beiboot --remote-bridge=supported";
++const gchar *cockpit_ws_ssh_program = "/usr/bin/env python3 -m cockpit.beiboot --remote-bridge=supported --";
+ 
+ /* Some tunables that can be set from tests */
+ const gchar *cockpit_ws_session_program = LIBEXECDIR "/cockpit-session";
