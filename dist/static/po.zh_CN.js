@@ -18,11 +18,11 @@ window.cockpit_po = {
  ],
  "$0 exited with code $1": [
   null,
-  "进程 $0 已退出，返回码为 $1"
+  "$0 退出，返回码为 $1"
  ],
  "$0 failed": [
   null,
-  "进程 $0 运行时出错"
+  "$0 失败"
  ],
  "$0 hour": [
   null,
@@ -106,7 +106,7 @@ window.cockpit_po = {
  ],
  "A new SSH key at $0 will be created for $1 on $2 and it will be added to the $3 file of $4 on $5.": [
   null,
-  "将在 $2 上为 $1 在 $0 处创建一个新的 SSH 密钥，该密钥将被添加到 $5 上 $4 的$3 文件中。"
+  "将在 $2 上为 $1 在 $0 处创建一个新的 SSH 密钥，该密钥将在 $5 上被添加到 $4 的 $3 文件中。"
  ],
  "Absent": [
   null,
@@ -138,7 +138,7 @@ window.cockpit_po = {
  ],
  "All-in-one": [
   null,
-  "一体机"
+  "一体化"
  ],
  "Ansible": [
   null,
@@ -223,6 +223,10 @@ window.cockpit_po = {
  "Checking installed software": [
   null,
   "检查安装的软件"
+ ],
+ "Clear input value": [
+  null,
+  "清除输入值"
  ],
  "Close": [
   null,
@@ -312,6 +316,10 @@ window.cockpit_po = {
   null,
   "复制到剪贴板"
  ],
+ "Create $0": [
+  null,
+  "创建 $0"
+ ],
  "Create a new SSH key and authorize it": [
   null,
   "创建一个新的 SSH 密钥，并对其进行授权"
@@ -392,9 +400,21 @@ window.cockpit_po = {
   null,
   "隐藏密码"
  ],
+ "Host is unknown": [
+  null,
+  "主机未知"
+ ],
  "Host key is incorrect": [
   null,
   "主机密钥不正确"
+ ],
+ "Hostkey does not match": [
+  null,
+  "HostKey 不匹配"
+ ],
+ "Hostkey is unknown": [
+  null,
+  "HostKey 未知"
  ],
  "If the fingerprint matches, click \"Accept key and log in\". Otherwise, do not log in and contact your administrator.": [
   null,
@@ -414,7 +434,7 @@ window.cockpit_po = {
  ],
  "Install the cockpit-system package (and optionally other cockpit packages) on $0 to enable web console access.": [
   null,
-  ""
+  "在 $0 上安装 cockpit-system 软件包（以及其他 cockpit 软件包）以启用 Web 控制台访问。"
  ],
  "Installing $0": [
   null,
@@ -427,6 +447,10 @@ window.cockpit_po = {
  "Internal error: Invalid challenge header": [
   null,
   "内部错误：无效的挑战字头部"
+ ],
+ "Internal protocol error": [
+  null,
+  "内部协议错误"
  ],
  "Invalid date format": [
   null,
@@ -626,7 +650,7 @@ window.cockpit_po = {
  ],
  "Packageless session unavailable": [
   null,
-  ""
+  "无软件包会话不可用"
  ],
  "Password": [
   null,
@@ -712,6 +736,10 @@ window.cockpit_po = {
   null,
   "最近的主机"
  ],
+ "Refusing to connect": [
+  null,
+  "拒绝连接"
+ ],
  "Removals:": [
   null,
   "移除："
@@ -756,13 +784,21 @@ window.cockpit_po = {
   null,
   "Security Enhanced Linux 配置和故障排除"
  ],
+ "Select an option": [
+  null,
+  "选择一个选项"
+ ],
  "Server": [
   null,
   "服务器"
  ],
+ "Server closed connection": [
+  null,
+  "服务器关闭了连接"
+ ],
  "Server has closed the connection.": [
   null,
-  "服务器关闭了连接。"
+  "服务器已关闭了连接。"
  ],
  "Set time": [
   null,
@@ -896,6 +932,10 @@ window.cockpit_po = {
   null,
   "这个工具配置 SELinux 策略，帮助理解和解决策略违规。"
  ],
+ "This tool configures the system to write kernel crash dumps. It supports the \"local\" (disk), \"ssh\", and \"nfs\" dump targets.": [
+  null,
+  "这个工具将系统配置为写内核崩溃转储。它支持\"local\" (磁盘)、\"ssh\"和\"nfs\"转储目标。"
+ ],
  "This tool generates an archive of configuration and diagnostic information from the running system. The archive may be stored locally or centrally for recording or tracking purposes or may be sent to technical support representatives, developers or system administrators to assist with technical fault-finding and debugging.": [
   null,
   "此工具从正在运行的系统中生成配置和诊断信息的存档。出于记录或跟踪目的，存档可能被存储在本地或集中存储，或者被发送到技术支持代表、开发人员或系统管理员，以帮助技术故障查找和调试。"
@@ -939,10 +979,6 @@ window.cockpit_po = {
  "Tower": [
   null,
   "Tower"
- ],
- "Transient packageless sessions require the same operating system and version, for compatibility reasons: $0.": [
-  null,
-  ""
  ],
  "Trust and add host": [
   null,

@@ -230,6 +230,10 @@ window.cockpit_po = {
   null,
   "დაყენებული პროგრამული უზრუნველყოფის შემოწმება"
  ],
+ "Clear input value": [
+  null,
+  "შეყვანილი მნიშვნელობის გასუფთავება"
+ ],
  "Close": [
   null,
   "დახურვა"
@@ -786,6 +790,10 @@ window.cockpit_po = {
   null,
   "Linux-ის გაფართოებული უსაფრთხოების (SELinux) მორგება და გამართვა"
  ],
+ "Select an option": [
+  null,
+  "აირჩიეთ პარამეტრი"
+ ],
  "Server": [
   null,
   "სერვერი"
@@ -977,10 +985,6 @@ window.cockpit_po = {
  "Tower": [
   null,
   "კომპიუტერის კორპუსი"
- ],
- "Transient packageless sessions require the same operating system and version, for compatibility reasons: $0.": [
-  null,
-  "შუალედურ უპაკეტო სესიებს იგივე ოპერაციული სისტემა და ვერსია სჭირდება თავსებადობისთვის: $0."
  ],
  "Trust and add host": [
   null,

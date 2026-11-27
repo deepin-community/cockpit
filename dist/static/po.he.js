@@ -210,6 +210,10 @@ window.cockpit_po = {
   null,
   "שלדת הרחבת אפיקים"
  ],
+ "Bypass browser check": [
+  null,
+  "עקיפת בדיקת דפדפן"
+ ],
  "Cancel": [
   null,
   "ביטול"
@@ -933,10 +937,6 @@ window.cockpit_po = {
  "Tower": [
   null,
   "מארז גבוה"
- ],
- "Transient packageless sessions require the same operating system and version, for compatibility reasons: $0.": [
-  null,
-  ""
  ],
  "Trust and add host": [
   null,

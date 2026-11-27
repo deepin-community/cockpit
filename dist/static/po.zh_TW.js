@@ -30,7 +30,7 @@ window.cockpit_po = {
  ],
  "$0 is not available from any repository.": [
   null,
-  "$0 在任何套件庫中都未提供。"
+  "$0 在任何軟體庫中都未提供。"
  ],
  "$0 key changed": [
   null,
@@ -126,7 +126,7 @@ window.cockpit_po = {
  ],
  "Additional packages:": [
   null,
-  "額外套件："
+  "額外軟體包："
  ],
  "Administration with Cockpit Web Console": [
   null,
@@ -224,6 +224,10 @@ window.cockpit_po = {
   null,
   "正在檢查已安裝的軟體"
  ],
+ "Clear input value": [
+  null,
+  "清除輸入的值"
+ ],
  "Close": [
   null,
   "關閉"
@@ -311,6 +315,10 @@ window.cockpit_po = {
  "Copy to clipboard": [
   null,
   "複製到剪貼簿"
+ ],
+ "Create $0": [
+  null,
+  "建立 $0"
  ],
  "Create a new SSH key and authorize it": [
   null,
@@ -426,7 +434,7 @@ window.cockpit_po = {
  ],
  "Install the cockpit-system package (and optionally other cockpit packages) on $0 to enable web console access.": [
   null,
-  "在 $0 上安裝 cockpit-system 套件 (與其他選擇性的 cockpit 套件) 以使用網頁控制台存取功能。"
+  "在 $0 上安裝 cockpit-system 軟體包（與其他選擇性的 cockpit 軟體包）以使用網頁控制台存取功能。"
  ],
  "Installing $0": [
   null,
@@ -642,7 +650,7 @@ window.cockpit_po = {
  ],
  "Packageless session unavailable": [
   null,
-  "未提供無須套件的工作階段"
+  "未提供無須軟體包的工作階段"
  ],
  "Password": [
   null,
@@ -775,6 +783,10 @@ window.cockpit_po = {
  "Security Enhanced Linux configuration and troubleshooting": [
   null,
   "Security Enhanced Linux 設定與疑難排解"
+ ],
+ "Select an option": [
+  null,
+  "選擇選項"
  ],
  "Server": [
   null,
@@ -967,10 +979,6 @@ window.cockpit_po = {
  "Tower": [
   null,
   "塔"
- ],
- "Transient packageless sessions require the same operating system and version, for compatibility reasons: $0.": [
-  null,
-  "暫時性的無須套件工作階段因相容性問題，須為相同的作業系統與版本： $0 。"
  ],
  "Trust and add host": [
   null,

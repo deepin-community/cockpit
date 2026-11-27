@@ -15,8 +15,7 @@
 # This tool can be run multiple times concurrently with itself, and it
 # wont get confused.
 
-import contextlib
-import fcntl
+import ctypes
 import json
 import os
 import re
@@ -32,52 +31,7 @@ def debug(msg):
     pass
 
 
-TMP_MP_DIR = "/var/lib/cockpit/btrfs"
-
-
-def read_all(fd):
-    data = b""
-    while True:
-        part = os.read(fd, 4096)
-        if len(part) == 0:
-            return data
-        data += part
-
-
-@contextlib.contextmanager
-def mount_database():
-    path = TMP_MP_DIR + "/db"
-    os.makedirs(TMP_MP_DIR, mode=0o700, exist_ok=True)
-    fd = os.open(path, os.O_RDWR | os.O_CREAT)
-    fcntl.flock(fd, fcntl.LOCK_EX)
-    data = read_all(fd)
-    blob = {}
-    try:
-        if len(data) > 0:
-            blob = json.loads(data)
-    except Exception as err:
-        sys.stderr.write(f"Failed to read {path} as JSON: {err}\n")
-    try:
-        yield blob
-        data = json.dumps(blob).encode() + b"\n"
-        os.lseek(fd, 0, os.SEEK_SET)
-        os.truncate(fd, 0)
-        os.write(fd, data)
-    finally:
-        os.close(fd)
-
-
-# There is contextlib.chdir in Python 3.11, which we should use once
-# it is available everywhere.
-#
-@contextlib.contextmanager
-def context_chdir(path):
-    old_cwd = os.getcwd()
-    os.chdir(path)
-    try:
-        yield
-    finally:
-        os.chdir(old_cwd)
+TMP_MP_DIR = "/run/cockpit/btrfs"
 
 
 def list_filesystems():
@@ -104,61 +58,48 @@ def list_filesystems():
     return filesystems
 
 
-tmp_mountpoints = set()
+def get_tmp_mountpoint_path(uuid):
+    return os.path.join(TMP_MP_DIR, uuid)
 
 
-def add_tmp_mountpoint(db, fs, dev, opt_repair):
-    global tmp_mountpoints
+mount_errors = {}
+
+
+def add_tmp_mountpoint(fs):
+    global mount_errors
     uuid = fs['uuid']
-    if uuid not in tmp_mountpoints:
-        debug(f"ADDING {uuid}")
-        tmp_mountpoints.add(uuid)
-        if uuid in db and db[uuid] > 0:
-            db[uuid] += 1
-        else:
-            db[uuid] = 1
-        if not fs['has_tmp_mountpoint'] and (db[uuid] == 1 or opt_repair):
-            path = TMP_MP_DIR + "/" + uuid
-            debug(f"MOUNTING {path}")
-            os.makedirs(path, exist_ok=True)
-            subprocess.check_call(["mount", dev, path])
+    if uuid in mount_errors:
+        return None
+    path = get_tmp_mountpoint_path(uuid)
+    try:
+        debug(f"MOUNTING {path}")
+        os.makedirs(path, exist_ok=True)
+        subprocess.check_call(["mount", fs['devices'][0], path])
+        return path
+    except Exception as err:
+        sys.stderr.write(f"Failed to mount {path}: {err}\n")
+        mount_errors[uuid] = str(err)
+        return None
 
 
-def remove_tmp_mountpoint(db, uuid):
-    global tmp_mountpoints
-    if uuid in tmp_mountpoints:
-        debug(f"REMOVING {uuid}")
-        tmp_mountpoints.remove(uuid)
-        if db[uuid] == 1:
-            path = TMP_MP_DIR + "/" + uuid
-            try:
-                debug(f"UNMOUNTING {path}")
-                subprocess.check_call(["umount", path])
-                subprocess.check_call(["rmdir", path])
-            except Exception as err:
-                sys.stderr.write(f"Failed to unmount {path}: {err}\n")
-            del db[uuid]
-        else:
-            db[uuid] -= 1
+def remove_tmp_mountpoint(uuid):
+    path = get_tmp_mountpoint_path(uuid)
+    try:
+        debug(f"UNMOUNTING {path}")
+        subprocess.check_call(["umount", path])
+    except Exception as err:
+        sys.stderr.write(f"Failed to unmount {path}: {err}\n")
 
 
-def remove_all_tmp_mountpoints():
-    with mount_database() as db:
-        for mp in set(tmp_mountpoints):
-            remove_tmp_mountpoint(db, mp)
-
-
-def force_mount_point(db, fs, opt_repair):
-    add_tmp_mountpoint(db, fs, fs['devices'][0], opt_repair)
-    return TMP_MP_DIR + "/" + fs['uuid']
-
-
-def get_mount_point(db, fs, opt_mount, opt_repair):
+def get_mount_point(fs, opt_mount):
     if len(fs['mountpoints']) > 0:
-        remove_tmp_mountpoint(db, fs['uuid'])
+        if fs['has_tmp_mountpoint']:
+            remove_tmp_mountpoint(fs['uuid'])
         return fs['mountpoints'][0]
+    elif fs['has_tmp_mountpoint']:
+        return get_tmp_mountpoint_path(fs['uuid'])
     elif opt_mount:
-        return force_mount_point(db, fs, opt_repair)
+        return add_tmp_mountpoint(fs)
     else:
         return None
 
@@ -167,7 +108,7 @@ def get_subvolume_info(mp):
     lines = subprocess.check_output(["btrfs", "subvolume", "list", "-apuq", mp]).splitlines()
     subvols = []
     for line in lines:
-        match = re.match(b"ID (\\d+).*parent (\\d+).*parent_uuid (.*)uuid (.*) path (<FS_TREE>/)?(.*)", line)
+        match = re.match(rb"ID (\d+).*parent (\d+).*parent_uuid (.*)uuid (.*) path (<FS_TREE>/)?(.*)", line)
         if match:
             pathname = match[6].decode(errors='replace')
             # Ignore podman btrfs subvolumes, they are an implementation detail.
@@ -180,13 +121,13 @@ def get_subvolume_info(mp):
                         'uuid': match[4].decode(),
                         'parent_uuid': None if match[3][0] == ord("-") else match[3].decode().strip()
                     }
-            ]
+                ]
     return subvols
 
 
 def get_default_subvolume(mp):
     output = subprocess.check_output(["btrfs", "subvolume", "get-default", mp])
-    match = re.match(b"ID (\\d+).*", output)
+    match = re.match(rb"ID (\d+).*", output)
     if match:
         return int(match[1])
     else:
@@ -197,38 +138,40 @@ def get_usages(uuid):
     output = subprocess.check_output(["btrfs", "filesystem", "show", "--raw", uuid])
     usages = {}
     for line in output.splitlines():
-        match = re.match(b".*used\\s+(\\d+)\\s+path\\s+([\\w/]+).*", line)
+        match = re.match(rb".*used\s+(\d+)\s+path\s+([\w/]+).*", line)
         if match:
             usages[match[2].decode()] = int(match[1])
     return usages
 
 
-def poll(opt_mount, opt_repair):
-    debug(f"POLL mount {opt_mount} repair {opt_repair}")
-    with mount_database() as db:
-        filesystems = list_filesystems()
-        info = {}
-        for fs in filesystems.values():
-            mp = get_mount_point(db, fs, opt_mount, opt_repair)
+def poll(opt_mount):
+    global mount_errors
+    debug(f"POLL mount {opt_mount}")
+    filesystems = list_filesystems()
+    info = {}
+    for fs in filesystems.values():
+        mp = get_mount_point(fs, opt_mount)
+        try:
+            data = {'usages': get_usages(fs['uuid'])}
             if mp:
-                try:
-                    info[fs['uuid']] = {
-                        'subvolumes': get_subvolume_info(mp),
-                        'default_subvolume': get_default_subvolume(mp),
-                        'usages': get_usages(fs['uuid']),
-                    }
-                except Exception as err:
-                    info[fs['uuid']] = {'error': str(err)}
+                data['subvolumes'] = get_subvolume_info(mp)
+                data['default_subvolume'] = get_default_subvolume(mp)
+            elif fs['uuid'] in mount_errors:
+                data['error'] = {'error': mount_errors[fs['uuid']]}
+            info[fs['uuid']] = data
+        except Exception as err:
+            info[fs['uuid']] = {'error': str(err)}
+
     return info
 
 
 def cmd_monitor(opt_mount):
-    old_infos = poll(opt_mount, opt_repair=False)
+    old_infos = poll(opt_mount)
     sys.stdout.write(json.dumps(old_infos) + "\n")
     sys.stdout.flush()
     while True:
         time.sleep(5.0)
-        new_infos = poll(opt_mount, opt_repair=False)
+        new_infos = poll(opt_mount)
         if new_infos != old_infos:
             sys.stdout.write(json.dumps(new_infos) + "\n")
             sys.stdout.flush()
@@ -236,23 +179,42 @@ def cmd_monitor(opt_mount):
 
 
 def cmd_poll(opt_mount):
-    infos = poll(opt_mount, opt_repair=True)
+    infos = poll(opt_mount)
     sys.stdout.write(json.dumps(infos) + "\n")
     sys.stdout.flush()
 
 
+def unshare_mounts():
+    # The os.unshare function is available since Python 3.12, but we
+    # still need to support older Pythons.
+    if "unshare" in os.__dict__:
+        os.unshare(os.CLONE_NEWNS)
+    else:
+        libc = ctypes.CDLL(None)
+        libc.unshare.argtypes = [ctypes.c_int]
+        get_errno_loc = libc.__errno_location
+        get_errno_loc.restype = ctypes.POINTER(ctypes.c_int)
+        ret = libc.unshare(2**17)
+        if ret != 0:
+            errno = get_errno_loc()[0]
+            raise OSError(errno, os.strerror(errno))
+    subprocess.check_call(["mount", "--make-rslave", "/"])
+
+
 def cmd_do(uuid, cmd):
     debug(f"DO {uuid} {cmd}")
-    with mount_database() as db:
-        filesystems = list_filesystems()
-        for fs in filesystems.values():
-            if fs['uuid'] == uuid:
-                mp = force_mount_point(db, fs, opt_repair=True)
-                with context_chdir(mp):
-                    subprocess.check_call(cmd)
+    filesystems = list_filesystems()
+    for fs in filesystems.values():
+        if fs['uuid'] == uuid:
+            path = TMP_MP_DIR
+            dev = fs['devices'][0]
+            os.makedirs(path, mode=0o700, exist_ok=True)
+            subprocess.check_call(["mount", dev, path])
+            subprocess.check_call(cmd, cwd=path)
 
 
 def cmd(args):
+    unshare_mounts()
     if len(args) > 1:
         if args[1] == "poll":
             cmd_poll(len(args) > 2)
@@ -269,8 +231,6 @@ def main(args):
     except Exception as err:
         sys.stderr.write(str(err) + "\n")
         sys.exit(1)
-    finally:
-        remove_all_tmp_mountpoints()
 
 
 main(sys.argv)

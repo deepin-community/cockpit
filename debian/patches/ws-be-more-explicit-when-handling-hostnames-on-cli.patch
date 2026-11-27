@@ -1,0 +1,80 @@
+From: Allison Karlitskaya <allison.karlitskaya@redhat.com>
+Date: Tue, 24 Mar 2026 15:44:15 +0100
+Subject: ws: be more explicit when handling hostnames on cli
+
+`cockpit-ws` has never protected hostnames from being interpreted as cli
+options when passing them to the auth commands (`cockpit-session`,
+`cockpit-ssh`, `cockpit.beiboot`).  There have been a couple of relevant
+changes over the years:
+
+  - our move to using cockpit-session via unix socket has removed
+    exposure to this problem for `cockpit-session`
+
+  - our move from `cockpit-ssh` (glib argument parser) to
+    `cockpit.beiboot` (Python argparse) has unfortunately exposed us to
+    https://github.com/python/cpython/issues/66623 which means (due to a
+    strange heuristic) that arguments starting with '-' can be
+    interpreted as positionals if they also have spaces in them
+
+This gives a way to get a hostname starting with a `-` to ssh (where it
+*will* be interpreted as an option) and the following argument (the
+python invocation on the remote) will be interpreted as the hostname.
+Fortunately, new versions of ssh will reject this hostname.  In any
+case, we should firm up the code here and add `--` to ensure that it's
+definitely interpreted as a hostname by ssh.
+
+For a similar reason add a `--` to the ssh command in `cockpit-ws`.
+
+CVE-2026-4631
+
+Origin: https://github.com/cockpit-project/cockpit/commit/9d0695647
+Origin-ferny: https://github.com/allisonkarlitskaya/ferny/commit/44ec511c99
+Bug-Debian: https://bugs.debian.org/1133022
+---
+ src/cockpit/_vendor/ferny/session.py | 2 +-
+ src/cockpit/beiboot.py               | 4 ++--
+ src/ws/cockpitauth.c                 | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/src/cockpit/_vendor/ferny/session.py b/src/cockpit/_vendor/ferny/session.py
+index d142bdb..ac4616d 100644
+--- a/src/cockpit/_vendor/ferny/session.py
++++ b/src/cockpit/_vendor/ferny/session.py
+@@ -145,7 +145,7 @@ class Session(SubprocessContext, InteractionHandler):
+ 
+         # SSH_ASKPASS_REQUIRE is not generally available, so use setsid
+         process = await asyncio.create_subprocess_exec(
+-            *('/usr/bin/ssh', *args, destination), env=env,
++            *('/usr/bin/ssh', *args, '--', destination), env=env,
+             start_new_session=True, stdin=asyncio.subprocess.DEVNULL,
+             stdout=asyncio.subprocess.DEVNULL, stderr=agent,  # type: ignore
+             preexec_fn=lambda: prctl(PR_SET_PDEATHSIG, signal.SIGKILL))
+diff --git a/src/cockpit/beiboot.py b/src/cockpit/beiboot.py
+index 12e369a..0d2a5fe 100644
+--- a/src/cockpit/beiboot.py
++++ b/src/cockpit/beiboot.py
+@@ -274,9 +274,9 @@ def via_ssh(cmd: Sequence[str], dest: str, ssh_askpass: Path, *ssh_opts: str) ->
+         # strip off [] IPv6 brackets
+         if host.startswith('[') and host.endswith(']'):
+             host = host[1:-1]
+-        destination = ['-p', port, host]
++        destination = ['-p', port, '--', host]
+     else:
+-        destination = [dest]
++        destination = ['--', dest]
+ 
+     return (
+         'ssh', *ssh_opts, *destination, shlex.join(cmd)
+diff --git a/src/ws/cockpitauth.c b/src/ws/cockpitauth.c
+index 3574189..6fd75be 100644
+--- a/src/ws/cockpitauth.c
++++ b/src/ws/cockpitauth.c
+@@ -51,7 +51,7 @@
+ 
+ /* we only support beibooting machines with a known/vetted OS, as it's impossible to guarantee
+  * forward compatibility for all pages */
+-const gchar *cockpit_ws_ssh_program = "/usr/bin/env python3 -m cockpit.beiboot --remote-bridge=supported";
++const gchar *cockpit_ws_ssh_program = "/usr/bin/env python3 -m cockpit.beiboot --remote-bridge=supported --";
+ 
+ /* Some tunables that can be set from tests */
+ const gchar *cockpit_ws_session_program = NULL;

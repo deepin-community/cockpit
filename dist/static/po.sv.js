@@ -230,6 +230,10 @@ window.cockpit_po = {
   null,
   "Kontrollerar installerad programvara"
  ],
+ "Clear input value": [
+  null,
+  "Rensa inmatningsvärde"
+ ],
  "Close": [
   null,
   "Stäng"
@@ -786,6 +790,10 @@ window.cockpit_po = {
   null,
   "Säkerhetsförbättrad Linux-konfiguration och felsökning"
  ],
+ "Select an option": [
+  null,
+  "Välj ett alternativ"
+ ],
  "Server": [
   null,
   "Server"
@@ -977,10 +985,6 @@ window.cockpit_po = {
  "Tower": [
   null,
   "Torn"
- ],
- "Transient packageless sessions require the same operating system and version, for compatibility reasons: $0.": [
-  null,
-  "Transienta paketlösa sessioner kräver samma operativsystem och version av kompatibilitetsskäl: $0."
  ],
  "Trust and add host": [
   null,

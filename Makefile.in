@@ -148,7 +148,7 @@ NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
 noinst_PROGRAMS = mock-pam-conv-mod.so$(EXEEXT)
-TESTS = test/static-code $(am__EXEEXT_2) $(am__EXEEXT_1) \
+TESTS = test/common/static-code $(am__EXEEXT_2) $(am__EXEEXT_1) \
 	$(am__EXEEXT_2) $(dist_TEST_SCRIPT) $(am__EXEEXT_3)
 check_PROGRAMS = $(am__EXEEXT_1) libpreload-temp-home.so$(EXEEXT) \
 	wsinstance-start$(EXEEXT) socket-activation-helper$(EXEEXT) \
@@ -191,20 +191,18 @@ am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 DIST_COMMON = $(srcdir)/Makefile.am $(top_srcdir)/configure \
 	$(am__configure_deps) $(dist_check_SCRIPTS) \
-	$(dist_cockpitclient_SCRIPTS) $(dist_motd_SCRIPTS) \
+	$(dist_cockpitclient_SCRIPTS) $(dist_issue_SCRIPTS) \
 	$(am__dist_applications_DATA_DIST) $(dist_archbranding_DATA) \
 	$(dist_centosbranding_DATA) $(dist_check_DATA) \
 	$(am__dist_client_metainfo_DATA_DIST) \
 	$(dist_cockpitclient_DATA) $(am__dist_dbusservices_DATA_DIST) \
 	$(dist_debianbranding_DATA) $(dist_defaultbranding_DATA) \
 	$(dist_fedorabranding_DATA) $(dist_icons128_DATA) \
-	$(dist_icons64_DATA) $(dist_motd_DATA) \
+	$(dist_icons64_DATA) $(dist_issue_DATA) \
 	$(am__dist_noinst_DATA_DIST) $(dist_opensusebranding_DATA) \
 	$(dist_rhelbranding_DATA) $(am__dist_scalableicon_DATA_DIST) \
-	$(dist_scientificbranding_DATA) \
 	$(am__dist_symbolicicon_DATA_DIST) $(dist_systemdunit_DATA) \
-	$(dist_sysusersconf_DATA) $(dist_ubuntubranding_DATA) \
-	$(am__DIST_COMMON)
+	$(dist_ubuntubranding_DATA) $(am__DIST_COMMON)
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno config.status.lineno
 mkinstalldirs = $(install_sh) -d
@@ -215,7 +213,7 @@ CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(cockpitwsdir)" \
 	"$(DESTDIR)$(libexecdir)" "$(DESTDIR)$(pamdir)" \
 	"$(DESTDIR)$(sbindir)" "$(DESTDIR)$(cockpitclientdir)" \
-	"$(DESTDIR)$(motddir)" "$(DESTDIR)$(libexecdir)" \
+	"$(DESTDIR)$(issuedir)" "$(DESTDIR)$(libexecdir)" \
 	"$(DESTDIR)$(man1dir)" "$(DESTDIR)$(man5dir)" \
 	"$(DESTDIR)$(man8dir)" "$(DESTDIR)$(applicationsdir)" \
 	"$(DESTDIR)$(archbrandingdir)" \
@@ -225,12 +223,10 @@ am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(cockpitwsdir)" \
 	"$(DESTDIR)$(debianbrandingdir)" \
 	"$(DESTDIR)$(defaultbrandingdir)" \
 	"$(DESTDIR)$(fedorabrandingdir)" "$(DESTDIR)$(icons128dir)" \
-	"$(DESTDIR)$(icons64dir)" "$(DESTDIR)$(motddir)" \
+	"$(DESTDIR)$(icons64dir)" "$(DESTDIR)$(issuedir)" \
 	"$(DESTDIR)$(opensusebrandingdir)" \
 	"$(DESTDIR)$(rhelbrandingdir)" "$(DESTDIR)$(scalableicondir)" \
-	"$(DESTDIR)$(scientificbrandingdir)" \
 	"$(DESTDIR)$(symbolicicondir)" "$(DESTDIR)$(systemdunitdir)" \
-	"$(DESTDIR)$(sysusersconfdir)" \
 	"$(DESTDIR)$(ubuntubrandingdir)" "$(DESTDIR)$(appdatadir)" \
 	"$(DESTDIR)$(metainfodir)" "$(DESTDIR)$(polkitdir)" \
 	"$(DESTDIR)$(systemdunitdir)" "$(DESTDIR)$(tmpfilesconfdir)" \
@@ -398,7 +394,8 @@ libpreload_temp_home_so_LINK = $(CCLD) \
 	$(libpreload_temp_home_so_CFLAGS) $(CFLAGS) \
 	$(libpreload_temp_home_so_LDFLAGS) $(LDFLAGS) -o $@
 am_mock_auth_command_OBJECTS =  \
-	src/ws/mock_auth_command-mock-auth-command.$(OBJEXT)
+	src/ws/mock_auth_command-mock-auth-command.$(OBJEXT) \
+	src/session/mock_auth_command-session-utils.$(OBJEXT)
 mock_auth_command_OBJECTS = $(am_mock_auth_command_OBJECTS)
 mock_auth_command_DEPENDENCIES = $(am__DEPENDENCIES_4) \
 	$(am__DEPENDENCIES_6)
@@ -563,7 +560,7 @@ am__uninstall_files_from_dir = { \
     || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
-SCRIPTS = $(dist_cockpitclient_SCRIPTS) $(dist_motd_SCRIPTS) \
+SCRIPTS = $(dist_cockpitclient_SCRIPTS) $(dist_issue_SCRIPTS) \
 	$(libexec_SCRIPTS)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
@@ -632,6 +629,7 @@ am__depfiles_remade = src/common/$(DEPDIR)/cockpitauthorize.Po \
 	src/pam-ssh-add/$(DEPDIR)/pam_ssh_add_so-pam-ssh-add.Po \
 	src/pam-ssh-add/$(DEPDIR)/test_ssh_add-test-ssh-add.Po \
 	src/session/$(DEPDIR)/client-certificate.Po \
+	src/session/$(DEPDIR)/mock_auth_command-session-utils.Po \
 	src/session/$(DEPDIR)/session-utils.Po \
 	src/session/$(DEPDIR)/session.Po \
 	src/testlib/$(DEPDIR)/libcockpit_test_a-cockpittest.Po \
@@ -775,9 +773,9 @@ am__dist_noinst_DATA_DIST = doc/guide/cockpit-guide.xml \
 	doc/guide/cockpit-manifest.xml doc/guide/cockpit-metrics.xml \
 	doc/guide/cockpit-series.xml doc/guide/cockpit-session.xml \
 	doc/guide/cockpit-spawn.xml doc/guide/cockpit-util.xml \
-	doc/guide/authentication.xml doc/guide/embedding.xml \
-	doc/guide/feature-firewall.xml doc/guide/feature-journal.xml \
-	doc/guide/feature-machines.xml \
+	doc/guide/multi-host.xml doc/guide/authentication.xml \
+	doc/guide/embedding.xml doc/guide/feature-firewall.xml \
+	doc/guide/feature-journal.xml doc/guide/feature-machines.xml \
 	doc/guide/feature-networkmanager.xml \
 	doc/guide/feature-packagekit.xml doc/guide/feature-pcp.xml \
 	doc/guide/feature-realmd.xml doc/guide/feature-selinux.xml \
@@ -803,11 +801,10 @@ DATA = $(dist_applications_DATA) $(dist_archbranding_DATA) \
 	$(dist_cockpitclient_DATA) $(dist_dbusservices_DATA) \
 	$(dist_debianbranding_DATA) $(dist_defaultbranding_DATA) \
 	$(dist_fedorabranding_DATA) $(dist_icons128_DATA) \
-	$(dist_icons64_DATA) $(dist_motd_DATA) $(dist_noinst_DATA) \
+	$(dist_icons64_DATA) $(dist_issue_DATA) $(dist_noinst_DATA) \
 	$(dist_opensusebranding_DATA) $(dist_rhelbranding_DATA) \
-	$(dist_scalableicon_DATA) $(dist_scientificbranding_DATA) \
-	$(dist_symbolicicon_DATA) $(dist_systemdunit_DATA) \
-	$(dist_sysusersconf_DATA) $(dist_ubuntubranding_DATA) \
+	$(dist_scalableicon_DATA) $(dist_symbolicicon_DATA) \
+	$(dist_systemdunit_DATA) $(dist_ubuntubranding_DATA) \
 	$(nodist_appdata_DATA) $(nodist_metainfo_DATA) \
 	$(nodist_polkit_DATA) $(nodist_systemdunit_DATA) \
 	$(nodist_tmpfilesconf_DATA) $(noinst_DATA) \
@@ -1023,7 +1020,6 @@ am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/config.h.in \
 	$(srcdir)/src/branding/fedora/Makefile.am \
 	$(srcdir)/src/branding/opensuse/Makefile.am \
 	$(srcdir)/src/branding/rhel/Makefile.am \
-	$(srcdir)/src/branding/scientific/Makefile.am \
 	$(srcdir)/src/branding/ubuntu/Makefile.am \
 	$(srcdir)/src/client/Makefile.am \
 	$(srcdir)/src/common/Makefile-common.am \
@@ -1242,8 +1238,6 @@ VALGRIND = valgrind --trace-children=yes --quiet --error-exitcode=33 --gen-suppr
 # automake doesn't like mixing `::` and `if`
 CHECK_LOCAL_TARGETS = $(am__append_4)
 CLEAN_LOCAL_TARGETS = $(am__append_3)
-
-# don't install empty LEGAL.txt files, see https://github.com/evanw/esbuild/issues/3670
 INSTALL_DATA_LOCAL_TARGETS = $(am__append_5) install-bundles \
 	$(am__append_10) install-python
 INSTALL_EXEC_HOOK_TARGETS = $(am__append_12)
@@ -1365,6 +1359,7 @@ INSTALL_FLATPAK_TARGETS = \
 @ENABLE_DOC_TRUE@	doc/guide/cockpit-session.xml \
 @ENABLE_DOC_TRUE@	doc/guide/cockpit-spawn.xml \
 @ENABLE_DOC_TRUE@	doc/guide/cockpit-util.xml \
+@ENABLE_DOC_TRUE@	doc/guide/multi-host.xml \
 @ENABLE_DOC_TRUE@	doc/guide/authentication.xml \
 @ENABLE_DOC_TRUE@	doc/guide/embedding.xml \
 @ENABLE_DOC_TRUE@	doc/guide/feature-firewall.xml \
@@ -1437,7 +1432,7 @@ DIST_STAMP = $(srcdir)/dist/static/manifest.json
 
 # dynamic pkg → dist dependency, to rebuild the bundles if any web related file changes
 # exclude automake unit test log files
-PKG_INPUTS = $(shell find $(srcdir)/pkg -type f ! -name 'test*.trs' ! -name 'test*.log')
+PKG_INPUTS = $(shell find $(srcdir)/pkg $(srcdir)/po -type f ! -name 'test*.trs' ! -name 'test*.log')
 V_BUNDLE = $(V_BUNDLE_$(V))
 V_BUNDLE_ = $(V_BUNDLE_$(AM_DEFAULT_VERBOSITY))
 V_BUNDLE_0 = @echo "  BUNDLE   dist";
@@ -1520,7 +1515,6 @@ dist_debianbranding_DATA = \
 defaultbrandingdir = $(datadir)/cockpit/branding/default
 dist_defaultbranding_DATA = \
 	src/branding/default/apple-touch-icon.png \
-	src/branding/default/bg-plain.jpg \
 	src/branding/default/branding.css \
 	src/branding/default/brand-large.png \
 	src/branding/default/favicon.ico \
@@ -1540,11 +1534,6 @@ dist_opensusebranding_DATA = \
 rhelbrandingdir = $(datadir)/cockpit/branding/rhel
 dist_rhelbranding_DATA = \
 	src/branding/rhel/branding.css \
-	$(NULL)
-
-scientificbrandingdir = $(datadir)/cockpit/branding/scientific
-dist_scientificbranding_DATA = \
-	src/branding/scientific/branding.css \
 	$(NULL)
 
 ubuntubrandingdir = $(datadir)/cockpit/branding/ubuntu
@@ -1745,7 +1734,7 @@ systemdgenerated = $(NULL) $(nodist_systemdunit_DATA) \
 	$(nodist_tmpfilesconf_DATA) $(nodist_polkit_DATA)
 systemdgenerated_in = $(patsubst %,%.in,$(systemdgenerated))
 nodist_systemdunit_DATA = \
-	src/systemd/cockpit-motd.service \
+	src/systemd/cockpit-issue.service \
 	src/systemd/cockpit.service \
 	src/systemd/cockpit.socket \
 	src/systemd/cockpit-session@.service \
@@ -1756,29 +1745,25 @@ nodist_systemdunit_DATA = \
 
 dist_systemdunit_DATA = \
 	src/systemd/cockpit-session.socket \
-	src/systemd/cockpit-ws-user.service \
+	src/systemd/cockpit-session-socket-user.service \
 	src/systemd/system-cockpithttps.slice \
 	src/systemd/cockpit-wsinstance-http.socket \
 	src/systemd/cockpit-wsinstance-https-factory.socket \
 	src/systemd/cockpit-wsinstance-https@.socket \
+	src/systemd/cockpit-wsinstance-socket-user.service \
 	$(NULL)
 
 
 # -----------------
-# motd
-motddir = $(datadir)/$(PACKAGE)/motd/
-dist_motd_DATA = src/systemd/inactive.motd
-dist_motd_SCRIPTS = src/systemd/update-motd
+# issue
+issuedir = $(datadir)/$(PACKAGE)/issue/
+dist_issue_DATA = src/systemd/inactive.issue
+dist_issue_SCRIPTS = src/systemd/update-issue
 
 # -----------------
 # tmpfiles
 tmpfilesconfdir = $(prefix)/lib/tmpfiles.d
 nodist_tmpfilesconf_DATA = src/systemd/tmpfiles.d/cockpit-ws.conf
-
-# -----------------
-# sysusers
-sysusersconfdir = $(prefix)/lib/sysusers.d
-dist_sysusersconf_DATA = src/systemd/sysusers.d/cockpit-wsinstance.conf
 
 # -----------------
 # Policykit
@@ -1937,7 +1922,7 @@ mock_echo_LDADD = $(glib_LIBS)
 mock_echo_SOURCES = src/ws/mock-echo.c
 mock_auth_command_CPPFLAGS = $(libcockpit_common_a_CPPFLAGS) $(TEST_CPP)
 mock_auth_command_LDADD = $(libcockpit_common_a_LIBS) $(TEST_LIBS)
-mock_auth_command_SOURCES = src/ws/mock-auth-command.c
+mock_auth_command_SOURCES = src/ws/mock-auth-command.c src/session/session-utils.c
 test_auth_CPPFLAGS = $(libcockpit_ws_a_CPPFLAGS) $(TEST_CPP)
 test_auth_LDADD = $(libcockpit_ws_a_LIBS) $(TEST_LIBS)
 test_auth_SOURCES = src/ws/test-auth.c
@@ -1966,7 +1951,7 @@ all: $(BUILT_SOURCES) config.h
 .SUFFIXES: .c .log .o .obj .sh .sh$(EXEEXT) .trs
 am--refresh: Makefile
 	@:
-$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am $(srcdir)/src/testlib/Makefile.am $(srcdir)/containers/Makefile.am $(srcdir)/containers/flatpak/Makefile.am $(srcdir)/doc/Makefile-doc.am $(srcdir)/doc/guide/Makefile-guide.am $(srcdir)/doc/man/Makefile-man.am $(srcdir)/pkg/Makefile.am $(srcdir)/po/Makefile.am $(srcdir)/selinux/Makefile.am $(srcdir)/src/Makefile.am $(srcdir)/src/branding/arch/Makefile.am $(srcdir)/src/branding/centos/Makefile.am $(srcdir)/src/branding/debian/Makefile.am $(srcdir)/src/branding/default/Makefile.am $(srcdir)/src/branding/fedora/Makefile.am $(srcdir)/src/branding/opensuse/Makefile.am $(srcdir)/src/branding/rhel/Makefile.am $(srcdir)/src/branding/scientific/Makefile.am $(srcdir)/src/branding/ubuntu/Makefile.am $(srcdir)/src/client/Makefile.am $(srcdir)/src/common/Makefile-common.am $(srcdir)/src/pam-ssh-add/Makefile.am $(srcdir)/src/session/Makefile-session.am $(srcdir)/src/systemd/Makefile.am $(srcdir)/src/tls/Makefile-tls.am $(srcdir)/src/websocket/Makefile-websocket.am $(srcdir)/src/ws/Makefile-ws.am $(srcdir)/tools/Makefile-tools.am $(am__configure_deps)
+$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am $(srcdir)/src/testlib/Makefile.am $(srcdir)/containers/Makefile.am $(srcdir)/containers/flatpak/Makefile.am $(srcdir)/doc/Makefile-doc.am $(srcdir)/doc/guide/Makefile-guide.am $(srcdir)/doc/man/Makefile-man.am $(srcdir)/pkg/Makefile.am $(srcdir)/po/Makefile.am $(srcdir)/selinux/Makefile.am $(srcdir)/src/Makefile.am $(srcdir)/src/branding/arch/Makefile.am $(srcdir)/src/branding/centos/Makefile.am $(srcdir)/src/branding/debian/Makefile.am $(srcdir)/src/branding/default/Makefile.am $(srcdir)/src/branding/fedora/Makefile.am $(srcdir)/src/branding/opensuse/Makefile.am $(srcdir)/src/branding/rhel/Makefile.am $(srcdir)/src/branding/ubuntu/Makefile.am $(srcdir)/src/client/Makefile.am $(srcdir)/src/common/Makefile-common.am $(srcdir)/src/pam-ssh-add/Makefile.am $(srcdir)/src/session/Makefile-session.am $(srcdir)/src/systemd/Makefile.am $(srcdir)/src/tls/Makefile-tls.am $(srcdir)/src/websocket/Makefile-websocket.am $(srcdir)/src/ws/Makefile-ws.am $(srcdir)/tools/Makefile-tools.am $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -1988,7 +1973,7 @@ Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	    echo ' cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__maybe_remake_depfiles)'; \
 	    cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__maybe_remake_depfiles);; \
 	esac;
-$(srcdir)/src/testlib/Makefile.am $(srcdir)/containers/Makefile.am $(srcdir)/containers/flatpak/Makefile.am $(srcdir)/doc/Makefile-doc.am $(srcdir)/doc/guide/Makefile-guide.am $(srcdir)/doc/man/Makefile-man.am $(srcdir)/pkg/Makefile.am $(srcdir)/po/Makefile.am $(srcdir)/selinux/Makefile.am $(srcdir)/src/Makefile.am $(srcdir)/src/branding/arch/Makefile.am $(srcdir)/src/branding/centos/Makefile.am $(srcdir)/src/branding/debian/Makefile.am $(srcdir)/src/branding/default/Makefile.am $(srcdir)/src/branding/fedora/Makefile.am $(srcdir)/src/branding/opensuse/Makefile.am $(srcdir)/src/branding/rhel/Makefile.am $(srcdir)/src/branding/scientific/Makefile.am $(srcdir)/src/branding/ubuntu/Makefile.am $(srcdir)/src/client/Makefile.am $(srcdir)/src/common/Makefile-common.am $(srcdir)/src/pam-ssh-add/Makefile.am $(srcdir)/src/session/Makefile-session.am $(srcdir)/src/systemd/Makefile.am $(srcdir)/src/tls/Makefile-tls.am $(srcdir)/src/websocket/Makefile-websocket.am $(srcdir)/src/ws/Makefile-ws.am $(srcdir)/tools/Makefile-tools.am $(am__empty):
+$(srcdir)/src/testlib/Makefile.am $(srcdir)/containers/Makefile.am $(srcdir)/containers/flatpak/Makefile.am $(srcdir)/doc/Makefile-doc.am $(srcdir)/doc/guide/Makefile-guide.am $(srcdir)/doc/man/Makefile-man.am $(srcdir)/pkg/Makefile.am $(srcdir)/po/Makefile.am $(srcdir)/selinux/Makefile.am $(srcdir)/src/Makefile.am $(srcdir)/src/branding/arch/Makefile.am $(srcdir)/src/branding/centos/Makefile.am $(srcdir)/src/branding/debian/Makefile.am $(srcdir)/src/branding/default/Makefile.am $(srcdir)/src/branding/fedora/Makefile.am $(srcdir)/src/branding/opensuse/Makefile.am $(srcdir)/src/branding/rhel/Makefile.am $(srcdir)/src/branding/ubuntu/Makefile.am $(srcdir)/src/client/Makefile.am $(srcdir)/src/common/Makefile-common.am $(srcdir)/src/pam-ssh-add/Makefile.am $(srcdir)/src/session/Makefile-session.am $(srcdir)/src/systemd/Makefile.am $(srcdir)/src/tls/Makefile-tls.am $(srcdir)/src/websocket/Makefile-websocket.am $(srcdir)/src/ws/Makefile-ws.am $(srcdir)/tools/Makefile-tools.am $(am__empty):
 
 $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
 	$(SHELL) ./config.status --recheck
@@ -2513,6 +2498,9 @@ libpreload-temp-home.so$(EXEEXT): $(libpreload_temp_home_so_OBJECTS) $(libpreloa
 	$(AM_V_CCLD)$(libpreload_temp_home_so_LINK) $(libpreload_temp_home_so_OBJECTS) $(libpreload_temp_home_so_LDADD) $(LIBS)
 src/ws/mock_auth_command-mock-auth-command.$(OBJEXT):  \
 	src/ws/$(am__dirstamp) src/ws/$(DEPDIR)/$(am__dirstamp)
+src/session/mock_auth_command-session-utils.$(OBJEXT):  \
+	src/session/$(am__dirstamp) \
+	src/session/$(DEPDIR)/$(am__dirstamp)
 
 mock-auth-command$(EXEEXT): $(mock_auth_command_OBJECTS) $(mock_auth_command_DEPENDENCIES) $(EXTRA_mock_auth_command_DEPENDENCIES) 
 	@rm -f mock-auth-command$(EXEEXT)
@@ -2764,12 +2752,12 @@ uninstall-dist_cockpitclientSCRIPTS:
 	files=`for p in $$list; do echo "$$p"; done | \
 	       sed -e 's,.*/,,;$(transform)'`; \
 	dir='$(DESTDIR)$(cockpitclientdir)'; $(am__uninstall_files_from_dir)
-install-dist_motdSCRIPTS: $(dist_motd_SCRIPTS)
+install-dist_issueSCRIPTS: $(dist_issue_SCRIPTS)
 	@$(NORMAL_INSTALL)
-	@list='$(dist_motd_SCRIPTS)'; test -n "$(motddir)" || list=; \
+	@list='$(dist_issue_SCRIPTS)'; test -n "$(issuedir)" || list=; \
 	if test -n "$$list"; then \
-	  echo " $(MKDIR_P) '$(DESTDIR)$(motddir)'"; \
-	  $(MKDIR_P) "$(DESTDIR)$(motddir)" || exit 1; \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(issuedir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(issuedir)" || exit 1; \
 	fi; \
 	for p in $$list; do \
 	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
@@ -2788,17 +2776,17 @@ install-dist_motdSCRIPTS: $(dist_motd_SCRIPTS)
 	while read type dir files; do \
 	     if test "$$dir" = .; then dir=; else dir=/$$dir; fi; \
 	     test -z "$$files" || { \
-	       echo " $(INSTALL_SCRIPT) $$files '$(DESTDIR)$(motddir)$$dir'"; \
-	       $(INSTALL_SCRIPT) $$files "$(DESTDIR)$(motddir)$$dir" || exit $$?; \
+	       echo " $(INSTALL_SCRIPT) $$files '$(DESTDIR)$(issuedir)$$dir'"; \
+	       $(INSTALL_SCRIPT) $$files "$(DESTDIR)$(issuedir)$$dir" || exit $$?; \
 	     } \
 	; done
 
-uninstall-dist_motdSCRIPTS:
+uninstall-dist_issueSCRIPTS:
 	@$(NORMAL_UNINSTALL)
-	@list='$(dist_motd_SCRIPTS)'; test -n "$(motddir)" || exit 0; \
+	@list='$(dist_issue_SCRIPTS)'; test -n "$(issuedir)" || exit 0; \
 	files=`for p in $$list; do echo "$$p"; done | \
 	       sed -e 's,.*/,,;$(transform)'`; \
-	dir='$(DESTDIR)$(motddir)'; $(am__uninstall_files_from_dir)
+	dir='$(DESTDIR)$(issuedir)'; $(am__uninstall_files_from_dir)
 install-libexecSCRIPTS: $(libexec_SCRIPTS)
 	@$(NORMAL_INSTALL)
 	@list='$(libexec_SCRIPTS)'; test -n "$(libexecdir)" || list=; \
@@ -2900,6 +2888,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/pam-ssh-add/$(DEPDIR)/pam_ssh_add_so-pam-ssh-add.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/pam-ssh-add/$(DEPDIR)/test_ssh_add-test-ssh-add.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/session/$(DEPDIR)/client-certificate.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/session/$(DEPDIR)/mock_auth_command-session-utils.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/session/$(DEPDIR)/session-utils.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/session/$(DEPDIR)/session.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/testlib/$(DEPDIR)/libcockpit_test_a-cockpittest.Po@am__quote@ # am--include-marker
@@ -3600,6 +3589,20 @@ src/ws/mock_auth_command-mock-auth-command.obj: src/ws/mock-auth-command.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/ws/mock-auth-command.c' object='src/ws/mock_auth_command-mock-auth-command.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mock_auth_command_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/ws/mock_auth_command-mock-auth-command.obj `if test -f 'src/ws/mock-auth-command.c'; then $(CYGPATH_W) 'src/ws/mock-auth-command.c'; else $(CYGPATH_W) '$(srcdir)/src/ws/mock-auth-command.c'; fi`
+
+src/session/mock_auth_command-session-utils.o: src/session/session-utils.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mock_auth_command_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/session/mock_auth_command-session-utils.o -MD -MP -MF src/session/$(DEPDIR)/mock_auth_command-session-utils.Tpo -c -o src/session/mock_auth_command-session-utils.o `test -f 'src/session/session-utils.c' || echo '$(srcdir)/'`src/session/session-utils.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/session/$(DEPDIR)/mock_auth_command-session-utils.Tpo src/session/$(DEPDIR)/mock_auth_command-session-utils.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/session/session-utils.c' object='src/session/mock_auth_command-session-utils.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mock_auth_command_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/session/mock_auth_command-session-utils.o `test -f 'src/session/session-utils.c' || echo '$(srcdir)/'`src/session/session-utils.c
+
+src/session/mock_auth_command-session-utils.obj: src/session/session-utils.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mock_auth_command_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/session/mock_auth_command-session-utils.obj -MD -MP -MF src/session/$(DEPDIR)/mock_auth_command-session-utils.Tpo -c -o src/session/mock_auth_command-session-utils.obj `if test -f 'src/session/session-utils.c'; then $(CYGPATH_W) 'src/session/session-utils.c'; else $(CYGPATH_W) '$(srcdir)/src/session/session-utils.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/session/$(DEPDIR)/mock_auth_command-session-utils.Tpo src/session/$(DEPDIR)/mock_auth_command-session-utils.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/session/session-utils.c' object='src/session/mock_auth_command-session-utils.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mock_auth_command_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/session/mock_auth_command-session-utils.obj `if test -f 'src/session/session-utils.c'; then $(CYGPATH_W) 'src/session/session-utils.c'; else $(CYGPATH_W) '$(srcdir)/src/session/session-utils.c'; fi`
 
 src/ws/mock_echo-mock-echo.o: src/ws/mock-echo.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(mock_echo_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/ws/mock_echo-mock-echo.o -MD -MP -MF src/ws/$(DEPDIR)/mock_echo-mock-echo.Tpo -c -o src/ws/mock_echo-mock-echo.o `test -f 'src/ws/mock-echo.c' || echo '$(srcdir)/'`src/ws/mock-echo.c
@@ -4408,27 +4411,27 @@ uninstall-dist_icons64DATA:
 	@list='$(dist_icons64_DATA)'; test -n "$(icons64dir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	dir='$(DESTDIR)$(icons64dir)'; $(am__uninstall_files_from_dir)
-install-dist_motdDATA: $(dist_motd_DATA)
+install-dist_issueDATA: $(dist_issue_DATA)
 	@$(NORMAL_INSTALL)
-	@list='$(dist_motd_DATA)'; test -n "$(motddir)" || list=; \
+	@list='$(dist_issue_DATA)'; test -n "$(issuedir)" || list=; \
 	if test -n "$$list"; then \
-	  echo " $(MKDIR_P) '$(DESTDIR)$(motddir)'"; \
-	  $(MKDIR_P) "$(DESTDIR)$(motddir)" || exit 1; \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(issuedir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(issuedir)" || exit 1; \
 	fi; \
 	for p in $$list; do \
 	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
 	  echo "$$d$$p"; \
 	done | $(am__base_list) | \
 	while read files; do \
-	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(motddir)'"; \
-	  $(INSTALL_DATA) $$files "$(DESTDIR)$(motddir)" || exit $$?; \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(issuedir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(issuedir)" || exit $$?; \
 	done
 
-uninstall-dist_motdDATA:
+uninstall-dist_issueDATA:
 	@$(NORMAL_UNINSTALL)
-	@list='$(dist_motd_DATA)'; test -n "$(motddir)" || list=; \
+	@list='$(dist_issue_DATA)'; test -n "$(issuedir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
-	dir='$(DESTDIR)$(motddir)'; $(am__uninstall_files_from_dir)
+	dir='$(DESTDIR)$(issuedir)'; $(am__uninstall_files_from_dir)
 install-dist_opensusebrandingDATA: $(dist_opensusebranding_DATA)
 	@$(NORMAL_INSTALL)
 	@list='$(dist_opensusebranding_DATA)'; test -n "$(opensusebrandingdir)" || list=; \
@@ -4492,27 +4495,6 @@ uninstall-dist_scalableiconDATA:
 	@list='$(dist_scalableicon_DATA)'; test -n "$(scalableicondir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	dir='$(DESTDIR)$(scalableicondir)'; $(am__uninstall_files_from_dir)
-install-dist_scientificbrandingDATA: $(dist_scientificbranding_DATA)
-	@$(NORMAL_INSTALL)
-	@list='$(dist_scientificbranding_DATA)'; test -n "$(scientificbrandingdir)" || list=; \
-	if test -n "$$list"; then \
-	  echo " $(MKDIR_P) '$(DESTDIR)$(scientificbrandingdir)'"; \
-	  $(MKDIR_P) "$(DESTDIR)$(scientificbrandingdir)" || exit 1; \
-	fi; \
-	for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  echo "$$d$$p"; \
-	done | $(am__base_list) | \
-	while read files; do \
-	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(scientificbrandingdir)'"; \
-	  $(INSTALL_DATA) $$files "$(DESTDIR)$(scientificbrandingdir)" || exit $$?; \
-	done
-
-uninstall-dist_scientificbrandingDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(dist_scientificbranding_DATA)'; test -n "$(scientificbrandingdir)" || list=; \
-	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
-	dir='$(DESTDIR)$(scientificbrandingdir)'; $(am__uninstall_files_from_dir)
 install-dist_symboliciconDATA: $(dist_symbolicicon_DATA)
 	@$(NORMAL_INSTALL)
 	@list='$(dist_symbolicicon_DATA)'; test -n "$(symbolicicondir)" || list=; \
@@ -4555,27 +4537,6 @@ uninstall-dist_systemdunitDATA:
 	@list='$(dist_systemdunit_DATA)'; test -n "$(systemdunitdir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	dir='$(DESTDIR)$(systemdunitdir)'; $(am__uninstall_files_from_dir)
-install-dist_sysusersconfDATA: $(dist_sysusersconf_DATA)
-	@$(NORMAL_INSTALL)
-	@list='$(dist_sysusersconf_DATA)'; test -n "$(sysusersconfdir)" || list=; \
-	if test -n "$$list"; then \
-	  echo " $(MKDIR_P) '$(DESTDIR)$(sysusersconfdir)'"; \
-	  $(MKDIR_P) "$(DESTDIR)$(sysusersconfdir)" || exit 1; \
-	fi; \
-	for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  echo "$$d$$p"; \
-	done | $(am__base_list) | \
-	while read files; do \
-	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(sysusersconfdir)'"; \
-	  $(INSTALL_DATA) $$files "$(DESTDIR)$(sysusersconfdir)" || exit $$?; \
-	done
-
-uninstall-dist_sysusersconfDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(dist_sysusersconf_DATA)'; test -n "$(sysusersconfdir)" || list=; \
-	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
-	dir='$(DESTDIR)$(sysusersconfdir)'; $(am__uninstall_files_from_dir)
 install-dist_ubuntubrandingDATA: $(dist_ubuntubranding_DATA)
 	@$(NORMAL_INSTALL)
 	@list='$(dist_ubuntubranding_DATA)'; test -n "$(ubuntubrandingdir)" || list=; \
@@ -4924,9 +4885,9 @@ recheck: all $(check_PROGRAMS) $(check_LIBRARIES) $(check_SCRIPTS) $(dist_check_
 	        am__force_recheck=am--force-recheck \
 	        TEST_LOGS="$$log_list"; \
 	exit $$?
-test/static-code.log: test/static-code
-	@p='test/static-code'; \
-	b='test/static-code'; \
+test/common/static-code.log: test/common/static-code
+	@p='test/common/static-code'; \
+	b='test/common/static-code'; \
 	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
@@ -5303,7 +5264,7 @@ check: $(BUILT_SOURCES)
 all-am: Makefile $(PROGRAMS) $(LIBRARIES) $(SCRIPTS) $(MANS) $(DATA) \
 		config.h
 installdirs:
-	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(cockpitwsdir)" "$(DESTDIR)$(libexecdir)" "$(DESTDIR)$(pamdir)" "$(DESTDIR)$(sbindir)" "$(DESTDIR)$(cockpitclientdir)" "$(DESTDIR)$(motddir)" "$(DESTDIR)$(libexecdir)" "$(DESTDIR)$(man1dir)" "$(DESTDIR)$(man5dir)" "$(DESTDIR)$(man8dir)" "$(DESTDIR)$(applicationsdir)" "$(DESTDIR)$(archbrandingdir)" "$(DESTDIR)$(centosbrandingdir)" "$(DESTDIR)$(client_metainfodir)" "$(DESTDIR)$(cockpitclientdir)" "$(DESTDIR)$(dbusservicesdir)" "$(DESTDIR)$(debianbrandingdir)" "$(DESTDIR)$(defaultbrandingdir)" "$(DESTDIR)$(fedorabrandingdir)" "$(DESTDIR)$(icons128dir)" "$(DESTDIR)$(icons64dir)" "$(DESTDIR)$(motddir)" "$(DESTDIR)$(opensusebrandingdir)" "$(DESTDIR)$(rhelbrandingdir)" "$(DESTDIR)$(scalableicondir)" "$(DESTDIR)$(scientificbrandingdir)" "$(DESTDIR)$(symbolicicondir)" "$(DESTDIR)$(systemdunitdir)" "$(DESTDIR)$(sysusersconfdir)" "$(DESTDIR)$(ubuntubrandingdir)" "$(DESTDIR)$(appdatadir)" "$(DESTDIR)$(metainfodir)" "$(DESTDIR)$(polkitdir)" "$(DESTDIR)$(systemdunitdir)" "$(DESTDIR)$(tmpfilesconfdir)" "$(DESTDIR)$(selinuxpackagesdir)"; do \
+	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(cockpitwsdir)" "$(DESTDIR)$(libexecdir)" "$(DESTDIR)$(pamdir)" "$(DESTDIR)$(sbindir)" "$(DESTDIR)$(cockpitclientdir)" "$(DESTDIR)$(issuedir)" "$(DESTDIR)$(libexecdir)" "$(DESTDIR)$(man1dir)" "$(DESTDIR)$(man5dir)" "$(DESTDIR)$(man8dir)" "$(DESTDIR)$(applicationsdir)" "$(DESTDIR)$(archbrandingdir)" "$(DESTDIR)$(centosbrandingdir)" "$(DESTDIR)$(client_metainfodir)" "$(DESTDIR)$(cockpitclientdir)" "$(DESTDIR)$(dbusservicesdir)" "$(DESTDIR)$(debianbrandingdir)" "$(DESTDIR)$(defaultbrandingdir)" "$(DESTDIR)$(fedorabrandingdir)" "$(DESTDIR)$(icons128dir)" "$(DESTDIR)$(icons64dir)" "$(DESTDIR)$(issuedir)" "$(DESTDIR)$(opensusebrandingdir)" "$(DESTDIR)$(rhelbrandingdir)" "$(DESTDIR)$(scalableicondir)" "$(DESTDIR)$(symbolicicondir)" "$(DESTDIR)$(systemdunitdir)" "$(DESTDIR)$(ubuntubrandingdir)" "$(DESTDIR)$(appdatadir)" "$(DESTDIR)$(metainfodir)" "$(DESTDIR)$(polkitdir)" "$(DESTDIR)$(systemdunitdir)" "$(DESTDIR)$(tmpfilesconfdir)" "$(DESTDIR)$(selinuxpackagesdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: $(BUILT_SOURCES)
@@ -5418,6 +5379,7 @@ distclean: distclean-am
 	-rm -f src/pam-ssh-add/$(DEPDIR)/pam_ssh_add_so-pam-ssh-add.Po
 	-rm -f src/pam-ssh-add/$(DEPDIR)/test_ssh_add-test-ssh-add.Po
 	-rm -f src/session/$(DEPDIR)/client-certificate.Po
+	-rm -f src/session/$(DEPDIR)/mock_auth_command-session-utils.Po
 	-rm -f src/session/$(DEPDIR)/session-utils.Po
 	-rm -f src/session/$(DEPDIR)/session.Po
 	-rm -f src/testlib/$(DEPDIR)/libcockpit_test_a-cockpittest.Po
@@ -5491,16 +5453,15 @@ install-data-am: install-cockpitwsPROGRAMS install-data-local \
 	install-dist_dbusservicesDATA install-dist_debianbrandingDATA \
 	install-dist_defaultbrandingDATA \
 	install-dist_fedorabrandingDATA install-dist_icons128DATA \
-	install-dist_icons64DATA install-dist_motdDATA \
-	install-dist_motdSCRIPTS install-dist_opensusebrandingDATA \
+	install-dist_icons64DATA install-dist_issueDATA \
+	install-dist_issueSCRIPTS install-dist_opensusebrandingDATA \
 	install-dist_rhelbrandingDATA install-dist_scalableiconDATA \
-	install-dist_scientificbrandingDATA \
 	install-dist_symboliciconDATA install-dist_systemdunitDATA \
-	install-dist_sysusersconfDATA install-dist_ubuntubrandingDATA \
-	install-man install-nodist_appdataDATA \
-	install-nodist_metainfoDATA install-nodist_polkitDATA \
-	install-nodist_systemdunitDATA install-nodist_tmpfilesconfDATA \
-	install-pamPROGRAMS install-selinuxpackagesDATA
+	install-dist_ubuntubrandingDATA install-man \
+	install-nodist_appdataDATA install-nodist_metainfoDATA \
+	install-nodist_polkitDATA install-nodist_systemdunitDATA \
+	install-nodist_tmpfilesconfDATA install-pamPROGRAMS \
+	install-selinuxpackagesDATA
 	@$(NORMAL_INSTALL)
 	$(MAKE) $(AM_MAKEFLAGS) install-data-hook
 install-dvi: install-dvi-am
@@ -5586,6 +5547,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f src/pam-ssh-add/$(DEPDIR)/pam_ssh_add_so-pam-ssh-add.Po
 	-rm -f src/pam-ssh-add/$(DEPDIR)/test_ssh_add-test-ssh-add.Po
 	-rm -f src/session/$(DEPDIR)/client-certificate.Po
+	-rm -f src/session/$(DEPDIR)/mock_auth_command-session-utils.Po
 	-rm -f src/session/$(DEPDIR)/session-utils.Po
 	-rm -f src/session/$(DEPDIR)/session.Po
 	-rm -f src/testlib/$(DEPDIR)/libcockpit_test_a-cockpittest.Po
@@ -5660,13 +5622,12 @@ uninstall-am: uninstall-binPROGRAMS uninstall-cockpitwsPROGRAMS \
 	uninstall-dist_debianbrandingDATA \
 	uninstall-dist_defaultbrandingDATA \
 	uninstall-dist_fedorabrandingDATA uninstall-dist_icons128DATA \
-	uninstall-dist_icons64DATA uninstall-dist_motdDATA \
-	uninstall-dist_motdSCRIPTS uninstall-dist_opensusebrandingDATA \
+	uninstall-dist_icons64DATA uninstall-dist_issueDATA \
+	uninstall-dist_issueSCRIPTS \
+	uninstall-dist_opensusebrandingDATA \
 	uninstall-dist_rhelbrandingDATA \
 	uninstall-dist_scalableiconDATA \
-	uninstall-dist_scientificbrandingDATA \
 	uninstall-dist_symboliciconDATA uninstall-dist_systemdunitDATA \
-	uninstall-dist_sysusersconfDATA \
 	uninstall-dist_ubuntubrandingDATA uninstall-libexecPROGRAMS \
 	uninstall-libexecSCRIPTS uninstall-local uninstall-man \
 	uninstall-nodist_appdataDATA uninstall-nodist_metainfoDATA \
@@ -5701,16 +5662,15 @@ uninstall-man: uninstall-man1 uninstall-man5 uninstall-man8
 	install-dist_dbusservicesDATA install-dist_debianbrandingDATA \
 	install-dist_defaultbrandingDATA \
 	install-dist_fedorabrandingDATA install-dist_icons128DATA \
-	install-dist_icons64DATA install-dist_motdDATA \
-	install-dist_motdSCRIPTS install-dist_opensusebrandingDATA \
+	install-dist_icons64DATA install-dist_issueDATA \
+	install-dist_issueSCRIPTS install-dist_opensusebrandingDATA \
 	install-dist_rhelbrandingDATA install-dist_scalableiconDATA \
-	install-dist_scientificbrandingDATA \
 	install-dist_symboliciconDATA install-dist_systemdunitDATA \
-	install-dist_sysusersconfDATA install-dist_ubuntubrandingDATA \
-	install-dvi install-dvi-am install-exec install-exec-am \
-	install-exec-hook install-html install-html-am install-info \
-	install-info-am install-libexecPROGRAMS install-libexecSCRIPTS \
-	install-man install-man1 install-man5 install-man8 \
+	install-dist_ubuntubrandingDATA install-dvi install-dvi-am \
+	install-exec install-exec-am install-exec-hook install-html \
+	install-html-am install-info install-info-am \
+	install-libexecPROGRAMS install-libexecSCRIPTS install-man \
+	install-man1 install-man5 install-man8 \
 	install-nodist_appdataDATA install-nodist_metainfoDATA \
 	install-nodist_polkitDATA install-nodist_systemdunitDATA \
 	install-nodist_tmpfilesconfDATA install-pamPROGRAMS \
@@ -5730,13 +5690,12 @@ uninstall-man: uninstall-man1 uninstall-man5 uninstall-man8
 	uninstall-dist_debianbrandingDATA \
 	uninstall-dist_defaultbrandingDATA \
 	uninstall-dist_fedorabrandingDATA uninstall-dist_icons128DATA \
-	uninstall-dist_icons64DATA uninstall-dist_motdDATA \
-	uninstall-dist_motdSCRIPTS uninstall-dist_opensusebrandingDATA \
+	uninstall-dist_icons64DATA uninstall-dist_issueDATA \
+	uninstall-dist_issueSCRIPTS \
+	uninstall-dist_opensusebrandingDATA \
 	uninstall-dist_rhelbrandingDATA \
 	uninstall-dist_scalableiconDATA \
-	uninstall-dist_scientificbrandingDATA \
 	uninstall-dist_symboliciconDATA uninstall-dist_systemdunitDATA \
-	uninstall-dist_sysusersconfDATA \
 	uninstall-dist_ubuntubrandingDATA uninstall-libexecPROGRAMS \
 	uninstall-libexecSCRIPTS uninstall-local uninstall-man \
 	uninstall-man1 uninstall-man5 uninstall-man8 \
@@ -5747,6 +5706,7 @@ uninstall-man: uninstall-man1 uninstall-man5 uninstall-man8
 
 .PRECIOUS: Makefile
 
+PYTHON3 ?= python3
 
 # See https://www.gnu.org/software/make/manual/html_node/Force-Targets.html
 FORCE:
@@ -5770,7 +5730,7 @@ distdir: $(DISTFILES)
 # Needed to ensure the tarball is correct for $(VERSION) override
 dist-hook: $(distdir)/src/cockpit/_version.py
 $(distdir)/src/cockpit/_version.py: FORCE
-	python3 '$(srcdir)'/src/build_backend.py --copy '$(srcdir)' '$(distdir)'
+	$(PYTHON3) '$(srcdir)'/src/build_backend.py --copy '$(srcdir)' '$(distdir)'
 	@rm -f $(distdir)/src/cockpit/_version.py
 	$(AM_V_GEN) echo "__version__ = '$(VERSION)'" > $@
 
@@ -5906,15 +5866,15 @@ $(DIST_STAMP): $(srcdir)/package-lock.json $(PKG_INPUTS)
 	@rm -f $(DIST_STAMP)
 	$(V_BUNDLE) cd $(srcdir) && NODE_ENV='$(NODE_ENV)' tools/termschutz ./build.js
 install-bundles:
-	cd $(srcdir)/dist; find */* -type f ! -name '*.LEGAL.txt' -exec install -D -m 644 '{}' '$(abspath $(DESTDIR)$(datadir))/cockpit/{}' \;
-	find $(srcdir)/dist -name '*.LEGAL.txt' ! -empty -exec install --target-directory '$(abspath $(DESTDIR)$(docdir))/legal' '{}' -D -m 644 '{}'  \;
+	cd $(srcdir)/dist; find */* -type f ! -name '*.LEGAL.txt' -a ! -path 'playground/*' -exec install -D -m 644 '{}' '$(abspath $(DESTDIR)$(datadir))/cockpit/{}' \;
+	find $(srcdir)/dist -name '*.LEGAL.txt' -exec install --target-directory '$(abspath $(DESTDIR)$(docdir))/legal' '{}' -D -m 644 '{}'  \;
 uninstall-bundles:
 	rm -rf $(DESTDIR)$(datadir)/cockpit
 
 # Extract translate attribute, Glade style, angular-gettext HTML translations
 po/cockpit.html.pot: $(srcdir)/package-lock.json
 	$(AM_V_GEN) mkdir -p $(dir $@) && \
-	$(srcdir)/pkg/lib/html2po.js -d $(srcdir) -o $@ \
+	$(srcdir)/pkg/lib/html2po -d $(srcdir) -o $@ \
 		$$(cd $(srcdir) && find pkg/ -name '*.html')
 
 # Extract cockpit style javascript translations
@@ -5930,9 +5890,9 @@ po/cockpit.js.pot:
 		$$( cd $(srcdir) && find pkg/ ! -name 'test-*' -name '*.[jt]s' -o -name '*.[jt]sx') | \
 		sed '/^#/ s/, c-format//' > $@
 
-po/cockpit.manifest.pot: $(srcdir)/package-lock.json
+po/cockpit.manifest.pot:
 	$(AM_V_GEN) mkdir -p $(dir $@) && \
-	$(srcdir)/pkg/lib/manifest2po.js -d $(srcdir) -o $@ \
+	$(srcdir)/pkg/lib/manifest2po -d $(srcdir) -o $@ \
 		$$(cd $(srcdir) && find pkg/ -name 'manifest.json')
 
 po/cockpit.appstream.pot:
@@ -5957,6 +5917,7 @@ po/cockpit.pot: po/cockpit.html.pot po/cockpit.js.pot po/cockpit.manifest.pot po
 @SELINUX_POLICY_ENABLED_TRUE@	$(AM_V_GEN) bzip2 -9 < $< > $@.tmp && mv $@.tmp $@
 @SELINUX_POLICY_ENABLED_TRUE@install-selinux:
 @SELINUX_POLICY_ENABLED_TRUE@	$(INSTALL) -d -m 700 $(DESTDIR)$(selinuxactivedir)
+PYTHON3 ?= python3
 
 # -----------------------------------------------------------------------------
 #  Python
@@ -5978,8 +5939,8 @@ install-python:
 	@# This needs to work on RHEL8 up through modern Fedora, offline, with
 	@# system packages available to the build.
 	@# See https://github.com/pypa/pip/issues/3063 for --ignore-installed
-	python3 -m pip install --no-index --force-reinstall --ignore-installed --root='$(DESTDIR)/' --prefix='$(prefix)' \
-		"$$(python3 '$(srcdir)'/src/build_backend.py --wheel '$(srcdir)' tmp/wheel)"
+	$(PYTHON3) -m pip install --no-index --force-reinstall --ignore-installed --root='$(DESTDIR)/' --prefix='$(prefix)' \
+		"$$($(PYTHON3) '$(srcdir)'/src/build_backend.py --wheel '$(srcdir)' tmp/wheel)"
 	mkdir -p $(DESTDIR)$(libexecdir)
 	mv -t $(DESTDIR)$(libexecdir) $(DESTDIR)$(bindir)/cockpit-askpass
 uninstall-python:
@@ -6029,12 +5990,6 @@ install-data-hook::
 	ln -sTfr $(DESTDIR)/usr/share/pixmaps/fedora-logo-sprite.png $(DESTDIR)$(rhelbrandingdir)/apple-touch-icon.png
 	ln -sTfr $(DESTDIR)/etc/favicon.png $(DESTDIR)$(rhelbrandingdir)/favicon.ico
 
-# Opportunistically use Scientific Linux logos. 
-install-data-hook::
-	ln -sTfr $(DESTDIR)/usr/share/pixmaps/system-logo-white.png $(DESTDIR)$(scientificbrandingdir)/logo.png
-	ln -sTfr $(DESTDIR)/usr/share/pixmaps/fedora-logo-sprite.png $(DESTDIR)$(scientificbrandingdir)/apple-touch-icon.png
-	ln -sTfr $(DESTDIR)/etc/favicon.png $(DESTDIR)$(scientificbrandingdir)/favicon.ico
-
 # Opportunistically use plymouth ubuntu logo
 install-data-hook::
 	ln -sTfr $(DESTDIR)/usr/share/plymouth/ubuntu-logo.png $(DESTDIR)$(ubuntubrandingdir)/logo.png
@@ -6043,11 +5998,6 @@ install-data-hook::
 @ENABLE_COCKPIT_CLIENT_TRUE@	ln -sfTv $(cockpitclientdir)/cockpit-client $(DESTDIR)/$(bindir)/cockpit-client
 src/common/fail-html.c: src/common/fail.html
 	$(AM_V_GEN) $(top_srcdir)/tools/escape-to-c cockpit_webresponse_fail_html_text < $< > $@.tmp && mv $@.tmp $@
-
-# set up cockpit-session to be setuid root, but only runnable by cockpit-session
-install-exec-hook::
-	chown -f root:cockpit-wsinstance $(DESTDIR)$(libexecdir)/cockpit-session || true
-	chmod -f 4750 $(DESTDIR)$(libexecdir)/cockpit-session || true
 
 # we can't generate these with config.status because,
 # eg. it does "@libexecdir@" -> "${exec_prefix}/libexec"
@@ -6062,9 +6012,9 @@ src/systemd/%: src/systemd/%.in
 # Automake: 'Variables using ... ‘sysconf’ ... are installed by install-exec.'
 install-exec-hook::
 	mkdir -p $(DESTDIR)$(sysconfdir)/motd.d
-	ln -sTfr $(DESTDIR)/run/cockpit/motd $(DESTDIR)$(sysconfdir)/motd.d/cockpit
+	ln -sTfr $(DESTDIR)/run/cockpit/issue $(DESTDIR)$(sysconfdir)/motd.d/cockpit
 	mkdir -p $(DESTDIR)$(sysconfdir)/issue.d
-	ln -sTfr $(DESTDIR)/run/cockpit/motd $(DESTDIR)$(sysconfdir)/issue.d/cockpit.issue
+	ln -sTfr $(DESTDIR)/run/cockpit/issue $(DESTDIR)$(sysconfdir)/issue.d/cockpit.issue
 
 # unlike the other files in this directory, our .in transformation is for translation
 src/systemd/%.policy: src/systemd/%.policy.in $(PO_FILES)
@@ -6077,7 +6027,7 @@ src/ws/mock-dbus-tests.c: $(GDBUS_CODEGEN_XML)
 	$(GDBUS_CODEGEN_INVOCATION) --body --output $@ $<
 
 install-tests::
-	mkdir -p $(DESTDIR)$(pamdir) $(DESTDIR)/etc/cockpit
+	mkdir -p $(DESTDIR)$(pamdir)
 	$(INSTALL_PROGRAM) mock-pam-conv-mod.so $(DESTDIR)$(pamdir)/
 
 install-exec-hook::

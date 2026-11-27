@@ -87,6 +87,11 @@ Once the machine is booted and the cockpit socket has been activated, a
 message will be printed describing how to access the virtual machine, via
 ssh and web.  See the "Helpful tips" section below.
 
+To login using the web client you have to use the username and password listed below. If you wish to enable `root` login using the web you can remove `root` from `/etc/cockpit/disallowed-users`.
+
+- Username: `admin`
+- Password: `foobar`
+
 By default, it's only possible to contact the virtual machine from the host
 machine on which it's running.   If you want to conduct manual testing from
 other devices on your network, set `TEST_BIND_GLOBAL=1`, for example:
@@ -171,7 +176,7 @@ You can set these environment variables to configure the test suite:
  * `TEST_OS`: The OS to run the tests in, like "fedora-coreos" or
     "debian-stable". See the "cockpit-project/cockpit" section in the
     [test map](https://github.com/cockpit-project/bots/blob/main/lib/testmap.py)
-    for all supported values. "fedora-40" is the default (`TEST_OS_DEFAULT` in
+    for all supported values. "fedora-41" is the default (`TEST_OS_DEFAULT` in
     bots' [constants.py](https://github.com/cockpit-project/bots/blob/main/lib/constants.py)).
 
  * `TEST_JOBS`:  How many tests to run in parallel.  The default is 1.

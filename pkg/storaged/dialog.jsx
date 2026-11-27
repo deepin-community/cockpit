@@ -874,8 +874,8 @@ export const SelectSpace = (tag, title, options) => {
                         return (
                             <DataListItem key={spc.block ? spc.block.Device : spc.desc}>
                                 <DataListItemRow>
-                                    <div className="pf-v5-c-data-list__item-control">
-                                        <div className="pf-v5-c-data-list__check">
+                                    <div className="pf-v6-c-data-list__item-control">
+                                        <div className="pf-v6-c-data-list__check">
                                             <input type='radio' value={desc} name='space' checked={val == spc} onChange={on_change} />
                                         </div>
                                     </div>
@@ -1038,7 +1038,8 @@ class SizeSliderElement extends React.Component {
             onChange({ text: value, unit });
         };
 
-        let slider_val, text_val;
+        let slider_val;
+        let text_val;
         if (val.text && val.unit) {
             slider_val = Number(val.text) * val.unit;
             text_val = val.text;
@@ -1051,7 +1052,7 @@ class SizeSliderElement extends React.Component {
             if (val.unit)
                 onChange({ text: val.text, unit: Number(u) });
             else
-                onChange(val / unit * Number(u));
+                onChange(size_slider_round(val / unit * Number(u), round));
             this.setState({ unit: Number(u) });
         };
 
@@ -1290,7 +1291,7 @@ export const TeardownMessage = (usage, expect_single_unmount) => {
                     use.actions.length ? use.actions.join(", ") : "-",
                     {
                         title: <UsersPopover users={use.users || []} />,
-                        props: { className: "pf-v5-u-text-align-right" }
+                        props: { className: "pf-v6-u-text-align-right" }
                     }
                 ]
             });
@@ -1324,7 +1325,7 @@ const AnacondaTeardownMessage = ({ usage }) => {
 
             rows.push(
                 <Tr key={index}>
-                    <Td className="pf-v5-u-font-weight-bold">{name}</Td>
+                    <Td className="pf-v6-u-font-weight-bold">{name}</Td>
                     <Td>{location}</Td>
                     <Td>{use.data_warning}</Td>
                 </Tr>);
@@ -1422,7 +1423,7 @@ export const StopProcessesMessage = ({ mount_point, users }) => {
         return {
             columns: [
                 u.pid,
-                { title: u.cmd.substr(0, 100), props: { modifier: "breakWord" } },
+                { title: u.cmd.substring(0, 100), props: { modifier: "breakWord" } },
                 u.user || "-",
                 { title: format_delay(-u.since * 1000), props: { modifier: "nowrap" } }
             ]
@@ -1433,7 +1434,7 @@ export const StopProcessesMessage = ({ mount_point, users }) => {
         return {
             columns: [
                 { title: u.unit.replace(/\.service$/, ""), props: { modifier: "breakWord" } },
-                { title: u.cmd.substr(0, 100), props: { modifier: "breakWord" } },
+                { title: u.cmd.substring(0, 100), props: { modifier: "breakWord" } },
                 { title: u.desc || "", props: { modifier: "breakWord" } },
                 { title: format_delay(-u.since * 1000), props: { modifier: "nowrap" } }
             ]

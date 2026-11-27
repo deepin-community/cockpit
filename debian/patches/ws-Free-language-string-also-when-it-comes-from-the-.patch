@@ -1,0 +1,29 @@
+From 233b1c178dcb95ccef356832afd9d60023d601e9 Mon Sep 17 00:00:00 2001
+From: Marius Vollmer <marius.vollmer@gmail.com>
+Date: Thu, 20 Aug 2026 15:23:08 +0300
+Subject: [PATCH] ws: Free "language" string also when it comes from the cookie
+
+See https://access.redhat.com/security/cve/cve-2026-76235
+---
+ src/ws/cockpithandlers.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/src/ws/cockpithandlers.c b/src/ws/cockpithandlers.c
+index ab61f1325..465b6bec9 100644
+--- a/src/ws/cockpithandlers.c
++++ b/src/ws/cockpithandlers.c
+@@ -482,7 +482,10 @@ send_login_html (CockpitWebResponse *response,
+ 
+   g_free (cookie_line);
+   g_free (content_security_policy);
+-  g_strfreev (languages);
++  if (languages)
++    g_strfreev (languages);
++  else
++    g_free (language);
+ }
+ 
+ static void
+-- 
+2.53.0
+

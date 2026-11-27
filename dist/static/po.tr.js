@@ -230,6 +230,10 @@ window.cockpit_po = {
   null,
   "Kurulu yazılımlar denetleniyor"
  ],
+ "Clear input value": [
+  null,
+  "Giriş değerini temizle"
+ ],
  "Close": [
   null,
   "Kapat"
@@ -786,6 +790,10 @@ window.cockpit_po = {
   null,
   "Güvenlik Gelişmiş Linux yapılandırması ve sorun giderme"
  ],
+ "Select an option": [
+  null,
+  "Bir seçenek seçin"
+ ],
  "Server": [
   null,
   "Sunucu"
@@ -977,10 +985,6 @@ window.cockpit_po = {
  "Tower": [
   null,
   "Tower"
- ],
- "Transient packageless sessions require the same operating system and version, for compatibility reasons: $0.": [
-  null,
-  "Geçici paketsiz oturumlar, uyumluluk nedenleriyle aynı işletim sistemi ve sürümünü gerektirir: $0."
  ],
  "Trust and add host": [
   null,

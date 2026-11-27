@@ -122,6 +122,10 @@ window.cockpit_po = {
   null,
   "Hyväksy avain ja kirjaudu sisään"
  ],
+ "Acceptable password": [
+  null,
+  "Hyväksyttävä salasana"
+ ],
  "Add $0": [
   null,
   "Lisää $0"
@@ -194,6 +198,10 @@ window.cockpit_po = {
   null,
   "Väylän laajennusalusta"
  ],
+ "Bypass browser check": [
+  null,
+  "Ohita selaimen tarkistus"
+ ],
  "Cancel": [
   null,
   "Peru"
@@ -221,6 +229,10 @@ window.cockpit_po = {
  "Checking installed software": [
   null,
   "Tarkistetaan asennettu ohjelmisto"
+ ],
+ "Clear input value": [
+  null,
+  "Tyhjennä syöttöarvo"
  ],
  "Close": [
   null,
@@ -310,6 +322,10 @@ window.cockpit_po = {
   null,
   "Kopioi leikepöydälle"
  ],
+ "Create $0": [
+  null,
+  "Luo $0"
+ ],
  "Create a new SSH key and authorize it": [
   null,
   "Luo uusi SSH-avain ja valtuuta se"
@@ -382,13 +398,29 @@ window.cockpit_po = {
   null,
   "Kädessä pidettävä"
  ],
+ "Hide confirmation password": [
+  null,
+  "Piilota salasanan vahvistus"
+ ],
  "Hide password": [
   null,
   "Piilota salasana"
  ],
+ "Host is unknown": [
+  null,
+  "Isäntä on tuntematon"
+ ],
  "Host key is incorrect": [
   null,
   "Koneen avain on väärin"
+ ],
+ "Hostkey does not match": [
+  null,
+  "Isäntäavain ei täsmää"
+ ],
+ "Hostkey is unknown": [
+  null,
+  "Isäntäavain on tuntematon"
  ],
  "If the fingerprint matches, click \"Accept key and log in\". Otherwise, do not log in and contact your administrator.": [
   null,
@@ -408,7 +440,7 @@ window.cockpit_po = {
  ],
  "Install the cockpit-system package (and optionally other cockpit packages) on $0 to enable web console access.": [
   null,
-  ""
+  "Asenna cockpit-system-paketti (ja valinnaisesti muut cockpit-paketit) $0:aan verkkokonsolin käytön mahdollistamiseksi."
  ],
  "Installing $0": [
   null,
@@ -421,6 +453,10 @@ window.cockpit_po = {
  "Internal error: Invalid challenge header": [
   null,
   "Sisäinen virhe: Virheellinen haasteen otsikko"
+ ],
+ "Internal protocol error": [
+  null,
+  "Sisäinen protokollavirhe"
  ],
  "Invalid date format": [
   null,
@@ -592,7 +628,7 @@ window.cockpit_po = {
  ],
  "Ok": [
   null,
-  "OK"
+  "Hyvä on"
  ],
  "Old password not accepted": [
   null,
@@ -620,7 +656,7 @@ window.cockpit_po = {
  ],
  "Packageless session unavailable": [
   null,
-  ""
+  "Pakettiton istunto ei saatavilla"
  ],
  "Password": [
   null,
@@ -706,6 +742,10 @@ window.cockpit_po = {
   null,
   "Viimeaikaiset isännät"
  ],
+ "Refusing to connect": [
+  null,
+  "Kieltäytyy muodostamasta yhteyttä"
+ ],
  "Removals:": [
   null,
   "Poistot:"
@@ -718,9 +758,17 @@ window.cockpit_po = {
   null,
   "Poistetaan $0"
  ],
+ "Row expansion": [
+  null,
+  "Rivin laajennus"
+ ],
+ "Row select": [
+  null,
+  "Rivin valinta"
+ ],
  "Run this command over a trusted network or physically on the remote machine:": [
   null,
-  ""
+  "Suorita tämä komento luotetussa verkossa tai fyysisesti etäkoneella:"
  ],
  "SELinux": [
   null,
@@ -730,6 +778,10 @@ window.cockpit_po = {
   null,
   "SSH-avain"
  ],
+ "SSH key login": [
+  null,
+  "SSH-avaimen sisäänkirjautuminen"
+ ],
  "Sealed-case PC": [
   null,
   "Suljettu tietokonekotelo"
@@ -738,9 +790,17 @@ window.cockpit_po = {
   null,
   "Security Enhanced Linuxin asetukset ja ongelmanratkaisu"
  ],
+ "Select an option": [
+  null,
+  "Valitse vaihtoehto"
+ ],
  "Server": [
   null,
   "Palvelin"
+ ],
+ "Server closed connection": [
+  null,
+  "Palvelin katkaisi yhteyden"
  ],
  "Server has closed the connection.": [
   null,
@@ -757,6 +817,10 @@ window.cockpit_po = {
  "Shift+Insert": [
   null,
   "Vaihto + Syöttö"
+ ],
+ "Show confirmation password": [
+  null,
+  "Näytä salasanan vahvistus"
  ],
  "Show password": [
   null,
@@ -785,6 +849,10 @@ window.cockpit_po = {
  "Storage": [
   null,
   "Tallennustila"
+ ],
+ "Strong password": [
+  null,
+  "Vahva salasana"
  ],
  "Sub-Chassis": [
   null,
@@ -826,6 +894,10 @@ window.cockpit_po = {
   null,
   "SSH-avain koneelle $0 sisäänkirjautumista varten on suojattu. Voit kirjautua sisään joko kirjautumissalasanallasi tai antamalla avaimen $1 salasanan."
  ],
+ "The fingerprint should match:": [
+  null,
+  "Sormenjäljen tulee vastata:"
+ ],
  "The key password can not be empty": [
   null,
   "Avaimen salasana ei voi olla tyhjä"
@@ -848,7 +920,7 @@ window.cockpit_po = {
  ],
  "The resulting fingerprint is fine to share via public methods, including email. If you are asking someone else to do the verification for you, they can send the results using any method.": [
   null,
-  ""
+  "Tuloksena oleva sormenjälki sopii jaettavaksi julkisilla menetelmillä, mukaan lukien sähköposti. Jos pyydät jotakuta toista suorittamaan vahvistuksen puolestasi, hän voi lähettää tulokset millä tahansa menetelmällä."
  ],
  "The server refused to authenticate '$0' using password authentication, and no other supported authentication methods are available.": [
   null,
@@ -865,6 +937,10 @@ window.cockpit_po = {
  "This tool configures the SELinux policy and can help with understanding and resolving policy violations.": [
   null,
   "Tämä työkalu asettaa SELinux-käytännön ja auttaa käytäntörikkeiden ymmärtämisessä ja ratkaisemisessa."
+ ],
+ "This tool configures the system to write kernel crash dumps. It supports the \"local\" (disk), \"ssh\", and \"nfs\" dump targets.": [
+  null,
+  "Tämä työkalu määrittää järjestelmän kirjoittamaan ytimen kaatumisvedoksia. Se tukee \"paikallisia\" (levy-), \"ssh\"- ja \"nfs\"-vedoskohteita."
  ],
  "This tool generates an archive of configuration and diagnostic information from the running system. The archive may be stored locally or centrally for recording or tracking purposes or may be sent to technical support representatives, developers or system administrators to assist with technical fault-finding and debugging.": [
   null,
@@ -910,9 +986,9 @@ window.cockpit_po = {
   null,
   "Torni"
  ],
- "Transient packageless sessions require the same operating system and version, for compatibility reasons: $0.": [
+ "Trust and add host": [
   null,
-  ""
+  "Luota ja lisää isäntä"
  ],
  "Try again": [
   null,
@@ -926,6 +1002,10 @@ window.cockpit_po = {
   null,
   "Siihen osoitteeseen yhdistäminen epäonnistui"
  ],
+ "Unable to log in to $0 using SSH key authentication. Please provide the password.": [
+  null,
+  "Ei voida kirjautua sisään $0:iin SSH-avaimella. Syötä salasana."
+ ],
  "Unable to log in to $0. The host does not accept password login or any of your SSH keys.": [
   null,
   "Ei voida kirjautua sisään koneelle $0. Kone ei hyväksy salasanakirjautumista tai mitään SSH-avaimistasi."
@@ -933,6 +1013,10 @@ window.cockpit_po = {
  "Unknown": [
   null,
   "Tuntematon"
+ ],
+ "Unknown host: $0": [
+  null,
+  "Tuntematon isäntä: $0"
  ],
  "Untrusted host": [
   null,
@@ -969,6 +1053,10 @@ window.cockpit_po = {
  "Waiting for other software management operations to finish": [
   null,
   "Odotetaan muiden ohjelmistojen hallintatoimintojen päättymistä"
+ ],
+ "Weak password": [
+  null,
+  "Heikko salasana"
  ],
  "Web Console for Linux servers": [
   null,
@@ -1008,11 +1096,11 @@ window.cockpit_po = {
  ],
  "in less than a minute": [
   null,
-  ""
+  "alle minuutissa"
  ],
  "less than a minute ago": [
   null,
-  ""
+  "alle minuutti sitten"
  ],
  "password quality": [
   null,

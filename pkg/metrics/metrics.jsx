@@ -28,14 +28,15 @@ import { DescriptionList, DescriptionListDescription, DescriptionListGroup, Desc
 import { Flex, FlexItem } from "@patternfly/react-core/dist/esm/layouts/Flex/index.js";
 import { Grid, GridItem } from "@patternfly/react-core/dist/esm/layouts/Grid/index.js";
 import { Icon } from "@patternfly/react-core/dist/esm/components/Icon/index.js";
-import { Modal } from "@patternfly/react-core/dist/esm/components/Modal/index.js";
-import { Page, PageGroup, PageSection, PageSectionVariants } from "@patternfly/react-core/dist/esm/components/Page/index.js";
+import {
+    Modal
+} from '@patternfly/react-core/dist/esm/deprecated/components/Modal/index.js';
+import { Page, PageGroup, PageSection, PageBreadcrumb } from "@patternfly/react-core/dist/esm/components/Page/index.js";
 import { Popover } from "@patternfly/react-core/dist/esm/components/Popover/index.js";
 import { Progress, ProgressVariant } from "@patternfly/react-core/dist/esm/components/Progress/index.js";
-import { Select, SelectOption } from "@patternfly/react-core/dist/esm/deprecated/components/Select/index.js";
 import { Stack, StackItem } from "@patternfly/react-core/dist/esm/layouts/Stack/index.js";
 import { Switch } from "@patternfly/react-core/dist/esm/components/Switch/index.js";
-import { Text, TextContent, TextVariants } from "@patternfly/react-core/dist/esm/components/Text/index.js";
+import { Content, ContentVariants } from "@patternfly/react-core/dist/esm/components/Content/index.js";
 import { Tooltip } from "@patternfly/react-core/dist/esm/components/Tooltip/index.js";
 import { Table, Thead, Td, Th, Tr, Tbody, TableGridBreakpoint, TableVariant, TableText } from '@patternfly/react-table';
 import {
@@ -55,6 +56,8 @@ import { get_manifest_config_matchlist } from "utils";
 import { useObject, useEvent, useInit } from "hooks.js";
 import { WithDialogs, useDialogs } from "dialogs.jsx";
 
+import { SimpleSelect } from "cockpit-components-simple-select.jsx";
+import { CheckboxSelect } from "cockpit-components-checkbox-select.jsx";
 import { EmptyStatePanel } from "../lib/cockpit-components-empty-state.jsx";
 import { JournalOutput } from "cockpit-components-logs-panel.jsx";
 import { install_dialog } from "cockpit-components-install-dialog.jsx";
@@ -68,7 +71,7 @@ const MSEC_PER_H = 3600000;
 const INTERVAL = 5000;
 const SAMPLES_PER_H = MSEC_PER_H / INTERVAL;
 const SAMPLES_PER_MIN = SAMPLES_PER_H / 60;
-const SVG_YMAX = (SAMPLES_PER_MIN - 1).toString();
+const SVG_YMAX = (SAMPLES_PER_MIN - 1);
 const LOAD_HOURS = 12;
 const _ = cockpit.gettext;
 
@@ -602,11 +605,11 @@ class CurrentMetrics extends React.Component {
         };
 
         let name_text = (
-            <Button variant="link" isInline component="a" key={name}
+            <Button variant="link" isInline isBlock component="a" key={name}
                     onClick={() => cgroupClickHandler(name, is_user, is_container, uid)}
                     isDisabled={is_container && !podman_installed}>
                 <TableText wrapModifier="truncate">
-                    {is_container ? _("pod") + " " + (this.getCachedPodName(uid, name) || name.substr(0, 12)) : name}
+                    {is_container ? _("pod") + " " + (this.getCachedPodName(uid, name) || name.substring(0, 12)) : name}
                 </TableText>
             </Button>
         );
@@ -725,7 +728,7 @@ class CurrentMetrics extends React.Component {
 
             allCpus = (
                 <Popover minWidth={0} aria-label={ _("View all CPUs") } bodyContent={cores}>
-                    <Button variant="link" className='pf-v5-u-font-size-sm'>{ _("View all CPUs") }</Button>
+                    <Button variant="link" className='pf-v6-u-font-size-sm'>{ _("View all CPUs") }</Button>
                 </Popover>);
         } else {
             cpu_label = this.state.cpuUsed + '%';
@@ -754,7 +757,7 @@ class CurrentMetrics extends React.Component {
                     <Thead>
                         <Tr>{diskColumns.map(col => <Th key={col}>{col}</Th>)}</Tr>
                     </Thead>
-                    <Tbody className="pf-v5-m-tabular-nums disks-nowrap">
+                    <Tbody className="pf-v6-m-tabular-nums disks-nowrap">
                         {make_rows(disksUsage, rowPropsDisks, diskColumns)}
                     </Tbody>
                 </Table>
@@ -762,7 +765,7 @@ class CurrentMetrics extends React.Component {
 
             allDisks = (
                 <Popover minWidth={0} aria-label={ _("View all disks") } bodyContent={disksTableContent}>
-                    <Button variant="link" className='pf-v5-u-font-size-sm'>{ _("View per-disk throughput") }</Button>
+                    <Button variant="link" className='pf-v6-u-font-size-sm'>{ _("View per-disk throughput") }</Button>
                 </Popover>
             );
         }
@@ -929,7 +932,7 @@ class CurrentMetrics extends React.Component {
                                         <Th>{_("Write")}</Th>
                                     </Tr>
                                 </Thead>
-                                <Tbody className="pf-v5-m-tabular-nums">
+                                <Tbody className="pf-v6-m-tabular-nums">
                                     {make_rows(this.state.topServicesDiskIO, rowPropsDiskIO, [_("Service"), _("Read"), _("Write")])}
                                 </Tbody>
                             </Table> }
@@ -1100,7 +1103,20 @@ class MetricsMinute extends React.Component {
         });
 
         let desc;
-        if (this.props.isExpanded && this.props.events) {
+        if (this.props.isExpanded && this.props.booted) {
+            const timestamp = this.props.startTime + (this.props.minute * 60000);
+            desc = (
+                <div className="metrics-events">
+                    <time>{ timeformat.time(timestamp) }</time>
+                    <span className="spikes_count" />
+                    <span className="spikes_info">
+                        <span className="type">
+                            {_("Boot")}
+                        </span>
+                    </span>
+                </div>
+            );
+        } else if (this.props.isExpanded && this.props.events) {
             const timestamp = this.props.startTime + (this.props.minute * 60000);
 
             const logsPanel = (
@@ -1169,6 +1185,7 @@ class MetricsHour extends React.Component {
         if (this.state.dataItems !== nextProps.data.length ||
             this.state.isHourExpanded !== nextState.isHourExpanded ||
             this.props.startTime !== nextProps.startTime ||
+            this.props.boots !== nextProps.boots ||
             Object.keys(this.props.selectedVisibility).some(itm => this.props.selectedVisibility[itm] != nextProps.selectedVisibility[itm])) {
             this.updateGraphs(nextProps.data, nextProps.startTime, nextProps.selectedVisibility, nextState.isHourExpanded);
             return false;
@@ -1236,6 +1253,8 @@ class MetricsHour extends React.Component {
             const dataOffset = minute * SAMPLES_PER_MIN;
             const dataSlice = normData.slice(dataOffset, dataOffset + SAMPLES_PER_MIN);
             const rawSlice = this.props.data.slice(dataOffset, dataOffset + SAMPLES_PER_MIN);
+            const is_boot = this.props.boots.includes(minute);
+
             minuteGraphs.push(
                 <MetricsMinute
                     isExpanded={isHourExpanded}
@@ -1245,7 +1264,8 @@ class MetricsHour extends React.Component {
                     rawData={rawSlice}
                     events={minute_events[minute]}
                     startTime={this.props.startTime}
-                    selectedVisibility={selectedVisibility} />
+                    selectedVisibility={selectedVisibility}
+                    booted={is_boot} />
             );
         }
 
@@ -1459,9 +1479,9 @@ const PCPConfigDialog = ({
                                 label={
                                     <Flex>
                                         <FlexItem>{ _("Collect metrics") }</FlexItem>
-                                        <TextContent>
-                                            <Text component={TextVariants.small}>(pmlogger.service)</Text>
-                                        </TextContent>
+                                        <Content>
+                                            <Content component={ContentVariants.small}>(pmlogger.service)</Content>
+                                        </Content>
                                     </Flex>
                                 }
                                 onChange={(_event, enable) => {
@@ -1476,9 +1496,7 @@ const PCPConfigDialog = ({
                                 label={
                                     <Flex>
                                         <FlexItem>{ _("Export to network") }</FlexItem>
-                                        <TextContent>
-                                            <Text component={TextVariants.small}>(pmproxy.service)</Text>
-                                        </TextContent>
+                                        <Content component={ContentVariants.small}>(pmproxy.service)</Content>
                                     </Flex>
                                 }
                                 isDisabled={ !dialogLoggerValue }
@@ -1558,7 +1576,8 @@ class MetricsHistory extends React.Component {
             packagekitExists: false,
             isBeibootBridge: false,
             isPythonPCPInstalled: null,
-            selectedVisibility: this.columns.reduce((a, v) => ({ ...a, [v[0]]: true }), {})
+            selectedVisibility: this.columns.reduce((a, v) => ({ ...a, [v[0]]: true }), {}),
+            boots: [], // journalctl --list-boots as [{started: Date, ended: Date}]
         };
 
         this.handleMoreData = this.handleMoreData.bind(this);
@@ -1620,8 +1639,24 @@ class MetricsHistory extends React.Component {
         } catch (_ex) {}
 
         const isBeibootBridge = cmdline?.includes("ic# cockpit-bridge");
-
         this.setState({ packagekitExists, isBeibootBridge });
+
+        try {
+            // Only 14 days of metrics are shown
+            // Requires superuser on Debian/Ubuntu, on Fedora/Arch users in the wheel group can list without superuser.
+            const output = await cockpit.spawn(["journalctl", "--list-boots", "--since", "-15d", "--output", "json"], { superuser: "try" });
+            const list_boots = JSON.parse(output);
+            const boots = list_boots.map(boot => {
+                return {
+                    started: new Date(boot?.first_entry / 1000),
+                    ended: new Date(boot?.last_entry / 1000),
+                    current_boot: boot?.index === 0,
+                };
+            });
+            this.setState({ boots });
+        } catch (exc) {
+            console.warn("journalctl --list-boots failed", exc);
+        }
     }
 
     handleMoreData() {
@@ -1632,7 +1667,7 @@ class MetricsHistory extends React.Component {
         this.setState({ isDatepickerOpened: isOpen });
     }
 
-    handleSelect(e, sel) {
+    handleSelect(sel) {
         // Stop fetching of new data
         if (this.history_refresh_timer !== null) {
             window.clearTimeout(this.history_refresh_timer);
@@ -1822,7 +1857,8 @@ class MetricsHistory extends React.Component {
         let nodata_alert = null;
         const lastHourIndex = this.state.hours.length - 1;
         if (!this.state.loading && this.state.hours.length > 0 && this.oldest_timestamp < this.state.hours[lastHourIndex]) {
-            let t1, t2;
+            let t1;
+            let t2;
             if (this.state.hours[lastHourIndex] - this.oldest_timestamp < 24 * MSEC_PER_H) {
                 t1 = timeformat.time(this.oldest_timestamp);
                 t2 = timeformat.time(this.state.hours[lastHourIndex]);
@@ -1841,32 +1877,30 @@ class MetricsHistory extends React.Component {
                 .map((_undef, i) => {
                     const date = this.today_midnight - i * 86400000;
                     const text = i == 0 ? _("Today") : timeformat.weekdayDate(date);
-                    return <SelectOption key={date} value={date}>{text}</SelectOption>;
+                    return { value: date, content: text };
                 });
 
         function Label(props) {
             return (
                 <div className={"metrics-label metrics-label-graph" + (props.items.length > 1 ? " have-saturation" : "")}>
                     <span>{props.label}</span>
-                    <TextContent className="metrics-sublabels">
-                        { props.items.map(i => <Text component={TextVariants.small} key={i}>{i}</Text>) }
-                    </TextContent>
+                    <Content className="metrics-sublabels">
+                        { props.items.map(i => <Content component={ContentVariants.small} key={i}>{i}</Content>) }
+                    </Content>
                 </div>
             );
         }
 
         const columnVisibilityMenuItems = this.columns.map(itm => {
-            return (
-                <SelectOption
-                    key={itm[0]}
-                    value={itm[1]}
-                    inputId={'column-visibility-option-' + itm[0]} />
-            );
+            return {
+                value: itm[0],
+                content: itm[1],
+            };
         });
         const selections = (
             this.columns
                     .filter(itm => this.state.selectedVisibility[itm[0]])
-                    .map(itm => itm[1])
+                    .map(itm => itm[0])
         );
 
         return (
@@ -1874,34 +1908,30 @@ class MetricsHistory extends React.Component {
                 <PageGroup stickyOnBreakpoint={{ default: 'top' }}>
                     <section className="metrics-heading">
                         <Flex className="metrics-selectors" spaceItems={{ default: 'spaceItemsSm' }}>
-                            <Select
-                                className="select-min metrics-label"
-                                aria-label={_("Jump to")}
-                                onToggle={this.handleToggle}
+                            <SimpleSelect
                                 onSelect={this.handleSelect}
-                                isOpen={this.state.isDatepickerOpened}
-                                selections={this.state.selectedDate}
-                                toggleId="date-picker-select-toggle"
-                            >
-                                {options}
-                            </Select>
-                            <Select
-                                toggleAriaLabel={_("Graph visibility options menu")}
-                                className="select-min metrics-label"
-                                variant="checkbox"
-                                isCheckboxSelectionBadgeHidden
-                                isOpen={!!this.state.isOpenColumnVisibility}
-                                onSelect={(_, selection) => {
-                                    const s = this.columns.find(itm => itm[1] == selection);
+                                selected={this.state.selectedDate}
+                                options={options}
+                                isScrollable
+                                toggleProps={{
+                                    id: "date-picker-select-toggle",
+                                    className: "select-min metrics-label",
+                                    "aria-label": _("Jump to")
+                                }} />
+                            <CheckboxSelect
+                                toggleProps={{
+                                    "aria-label": _("Graph visibility options menu"),
+                                    className: "select-min metrics-label",
+                                }}
+                                toggleContent={_("Graph visibility")}
+                                noBadge
+                                onSelect={(selection, checked) => {
                                     this.setState(prevState => ({
-                                        selectedVisibility: { ...prevState.selectedVisibility, [s[0]]: !prevState.selectedVisibility[s[0]] }
+                                        selectedVisibility: { ...prevState.selectedVisibility, [selection]: checked }
                                     }));
                                 }}
-                                onToggle={() => this.setState({ isOpenColumnVisibility: !this.state.isOpenColumnVisibility })}
-                                placeholderText={_("Graph visibility")}
-                                selections={selections}>
-                                {columnVisibilityMenuItems}
-                            </Select>
+                                selected={selections}
+                                options={columnVisibilityMenuItems} />
                         </Flex>
                         <Stack className="metrics-label-graph-mobile">
                             {[["cpu", _("CPU usage/load")], ["memory", _("Memory usage/swap")], ["disks", _("Disk I/O")], ["network", _("Network")]]
@@ -1921,20 +1951,26 @@ class MetricsHistory extends React.Component {
                         </div>
                     </section>
                 </PageGroup>
-                <PageSection className="metrics-history-section" variant={PageSectionVariants.light}>
+                <PageSection hasBodyWrapper={false} className="metrics-history-section">
                     <>
                         { this.state.hours.length > 0 &&
                         <Card isPlain>
                             <CardBody className="metrics-history">
                                 { this.state.hours.map((time, i) => {
+                                    const date_time = new Date(time);
+                                    const boot_minutes = this.state.boots.filter(reboot => reboot.started.getDay() === date_time.getDay() &&
+                                                                                           reboot.started.getYear() === date_time.getYear() &&
+                                                                                           reboot.started.getHours() === date_time.getHours())
+                                            .map(reboot => reboot.started.getMinutes());
                                     const showHeader = i == 0 || timeformat.date(time) != timeformat.date(this.state.hours[i - 1]);
 
                                     return (
                                         <React.Fragment key={timeformat.dateTime(time)}>
-                                            {showHeader && <TextContent><Text component={TextVariants.h3} className="metrics-time"><time>{ timeformat.date(time) }</time></Text></TextContent>}
+                                            {showHeader && <Content><Content component={ContentVariants.h3} className="metrics-time"><time>{ timeformat.date(time) }</time></Content></Content>}
                                             <MetricsHour key={time} startTime={parseInt(time)}
                                                          selectedVisibility={this.state.selectedVisibility}
-                                                         data={this.data[time]} clipLeading={i == 0} />
+                                                         data={this.data[time]} clipLeading={i == 0}
+                                                         boots={boot_minutes} />
                                         </React.Fragment>
                                     );
                                 })}
@@ -1958,12 +1994,16 @@ export const Application = () => {
 
     return (
         <WithDialogs>
-            <Page additionalGroupedContent={
-                <PageSection id="metrics-header-section" variant={PageSectionVariants.light} type='breadcrumb'>
+            <Page className='no-masthead-sidebar'>
+                <PageBreadcrumb
+                    id='metrics-header-section'
+                    hasBodyWrapper={false}
+                    stickyOnBreakpoint={{ default: "top" }}
+                >
                     <Flex>
                         <FlexItem>
                             <Breadcrumb>
-                                <BreadcrumbItem onClick={() => cockpit.jump("/system")} className="pf-v5-c-breadcrumb__link">{_("Overview")}</BreadcrumbItem>
+                                <BreadcrumbItem onClick={() => cockpit.jump("/system")} className="pf-v6-c-breadcrumb__link">{_("Overview")}</BreadcrumbItem>
                                 <BreadcrumbItem isActive>{_("Metrics and history")}</BreadcrumbItem>
                             </Breadcrumb>
                         </FlexItem>
@@ -1972,11 +2012,10 @@ export const Application = () => {
                                              firewalldRequest={setFirewalldRequest} />
                         </FlexItem>
                     </Flex>
-                </PageSection>
-            }>
+                </PageBreadcrumb>
                 { firewalldRequest &&
                 <FirewalldRequest service={firewalldRequest.service} title={firewalldRequest.title} pageSection /> }
-                <PageSection>
+                <PageSection hasBodyWrapper={false}>
                     <CurrentMetrics />
                 </PageSection>
                 <MetricsHistory firewalldRequest={setFirewalldRequest} />

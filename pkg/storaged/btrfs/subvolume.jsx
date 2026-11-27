@@ -21,7 +21,7 @@ import cockpit from "cockpit";
 import React from "react";
 
 import { Button } from "@patternfly/react-core/dist/esm/components/Button/index.js";
-import { Card, CardBody, CardHeader, CardTitle } from "@patternfly/react-core/dist/esm/components/Card/index.js";
+import { CardBody, CardHeader } from "@patternfly/react-core/dist/esm/components/Card/index.js";
 import { DescriptionList } from "@patternfly/react-core/dist/esm/components/DescriptionList/index.js";
 
 import { dirname } from "cockpit-path";
@@ -372,14 +372,19 @@ function make_btrfs_subvolume_page(parent, volume, subvol, path_prefix, subvols)
     // be reflected in the UI. However, we don't allow deleting the
     // last mounted subvolume, since that would also break the
     // subvolume listing.
+    //
+    // In Anaconda mode, however, we always have a proper list of
+    // subvolumes, so we always allow creation and deletion.
 
     let create_excuse = "";
     let delete_excuse = "";
-    if (!block_fsys || block_fsys.MountPoints.length == 0)
-        create_excuse = delete_excuse = _("At least one subvolume needs to be mounted");
-    else if (block_fsys && block_fsys.MountPoints.length == 1 &&
-             decode_filename(block_fsys.MountPoints[0]) == mount_point) {
-        delete_excuse = _("The last mounted subvolume can not be deleted");
+    if (!client.in_anaconda_mode()) {
+        if (!block_fsys || block_fsys.MountPoints.length == 0)
+            create_excuse = delete_excuse = _("At least one subvolume needs to be mounted");
+        else if (block_fsys && block_fsys.MountPoints.length == 1 &&
+            decode_filename(block_fsys.MountPoints[0]) == mount_point) {
+            delete_excuse = _("The last mounted subvolume can not be deleted");
+        }
     }
 
     actions.push({
@@ -479,22 +484,18 @@ const BtrfsSubvolumeCard = ({ card, volume, subvol, snapshot_origin, mismount_wa
                     </StorageDescription>
                 </DescriptionList>
             </CardBody>
-            <CardBody className="contains-list">
-                <ChildrenTable emptyCaption={_("No subvolumes")}
-                               aria-label={_("btrfs subvolumes")}
-                               page={card.page} />
-            </CardBody>
+            <ChildrenTable
+                emptyCaption={_("No subvolumes")}
+                aria-label={_("btrfs subvolumes")}
+                page={card.page} />
             {crossrefs &&
-            <Card data-test-card-title="Snapshots">
-                <CardHeader>
-                    <CardTitle component="h2">{_("Snapshots")}</CardTitle>
-                </CardHeader>
-                <CardBody className="contains-list">
-                    <PageTable emptyCaption={_("No snapshots found")}
-                                       aria-label={_("snapshot")}
-                                       crossrefs={crossrefs} />
-                </CardBody>
-            </Card>
+                <>
+                    <CardHeader><strong>{_("Snapshots")}</strong></CardHeader>
+                    <PageTable
+                        emptyCaption={_("No snapshots found")}
+                        aria-label={_("snapshot")}
+                        crossrefs={crossrefs} />
+                </>
             }
         </StorageCard>);
 };

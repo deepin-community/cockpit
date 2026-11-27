@@ -198,6 +198,10 @@ window.cockpit_po = {
   null,
   "Busuitbreidingschassis"
  ],
+ "Bypass browser check": [
+  null,
+  "Browsercontrole omzeilen"
+ ],
  "Cancel": [
   null,
   "Annuleren"
@@ -225,6 +229,10 @@ window.cockpit_po = {
  "Checking installed software": [
   null,
   "Controleren op geïnstalleerde software"
+ ],
+ "Clear input value": [
+  null,
+  "Invoerwaarde wissen"
  ],
  "Close": [
   null,
@@ -313,6 +321,10 @@ window.cockpit_po = {
  "Copy to clipboard": [
   null,
   "Kopiëren naar clipboard"
+ ],
+ "Create $0": [
+  null,
+  "Maak $0 aan"
  ],
  "Create a new SSH key and authorize it": [
   null,
@@ -416,7 +428,7 @@ window.cockpit_po = {
  ],
  "Install the cockpit-system package (and optionally other cockpit packages) on $0 to enable web console access.": [
   null,
-  ""
+  "Installeer het cockpit-systeempakket (en optioneel andere cockpitpakketten) op $0 om toegang tot de webconsole mogelijk te maken."
  ],
  "Installing $0": [
   null,
@@ -628,7 +640,7 @@ window.cockpit_po = {
  ],
  "Packageless session unavailable": [
   null,
-  ""
+  "Pakketloze sessie niet beschikbaar"
  ],
  "Password": [
   null,
@@ -930,10 +942,6 @@ window.cockpit_po = {
   null,
   "Toren"
  ],
- "Transient packageless sessions require the same operating system and version, for compatibility reasons: $0.": [
-  null,
-  ""
- ],
  "Trust and add host": [
   null,
   "Vertrouw en voeg host toe"
@@ -1036,11 +1044,11 @@ window.cockpit_po = {
  ],
  "in less than a minute": [
   null,
-  ""
+  "in minder dan een minuut"
  ],
  "less than a minute ago": [
   null,
-  ""
+  "minder dan een minuut geleden"
  ],
  "password quality": [
   null,

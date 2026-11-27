@@ -1,2 +1,10 @@
-0001-disable-make-package-lock-json-in-debian-build.patch
-cve_2026_4631.patch
+ws-be-more-explicit-when-handling-hostnames-on-cli.patch
+ws-Free-language-string-also-when-it-comes-from-the-.patch
+
+# pkg-systemd-robustify-argument-quoting.patch is deliberately NOT applied:
+# this branch ships prebuilt dist/ bundles and does not rebuild them during
+# package build. Applying a patch under pkg/ makes that source newer than the
+# committed dist/ stamp (dist/static/manifest.json), which makes the Makefile
+# attempt a full bundle rebuild that fails for lack of node_modules. The patch
+# is kept only to document the source change; the fix reaches the shipped
+# bundle via direct bundle seddery in debian/rules.

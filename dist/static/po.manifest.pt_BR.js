@@ -10,7 +10,7 @@ window.cockpit_po = {
  ],
  "Kernel dump": [
   null,
-  "Dump do Kernel"
+  "Dump do kernel"
  ],
  "Networking": [
   null,

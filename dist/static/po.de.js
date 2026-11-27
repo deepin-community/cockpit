@@ -230,6 +230,10 @@ window.cockpit_po = {
   null,
   "Installierte Software wird überprüft"
  ],
+ "Clear input value": [
+  null,
+  "Eingabewert löschen"
+ ],
  "Close": [
   null,
   "Schließen"
@@ -318,6 +322,10 @@ window.cockpit_po = {
   null,
   "In Zwischenablage kopieren"
  ],
+ "Create $0": [
+  null,
+  "$0 erstellen"
+ ],
  "Create a new SSH key and authorize it": [
   null,
   "Einen neuen SSH-Schlüssel erstellen und ihn autorisieren"
@@ -364,7 +372,7 @@ window.cockpit_po = {
  ],
  "Embedded PC": [
   null,
-  "Embedded PC"
+  "Eingebetteter PC"
  ],
  "Excellent password": [
   null,
@@ -390,9 +398,29 @@ window.cockpit_po = {
   null,
   "Handheld"
  ],
+ "Hide confirmation password": [
+  null,
+  "Bestätigungspasswort ausblenden"
+ ],
+ "Hide password": [
+  null,
+  "Passwort ausblenden"
+ ],
+ "Host is unknown": [
+  null,
+  "Host ist unbekannt"
+ ],
  "Host key is incorrect": [
   null,
   "Host-Schlüssel ist falsch"
+ ],
+ "Hostkey does not match": [
+  null,
+  "Hostkey stimmt nicht überein"
+ ],
+ "Hostkey is unknown": [
+  null,
+  "Hostkey ist unbekannt"
  ],
  "If the fingerprint matches, click \"Accept key and log in\". Otherwise, do not log in and contact your administrator.": [
   null,
@@ -408,7 +436,7 @@ window.cockpit_po = {
  ],
  "Install the cockpit-system package (and optionally other cockpit packages) on $0 to enable web console access.": [
   null,
-  ""
+  "Installieren Sie das Paket cockpit-system (und optional weitere Cockpit-Pakete) auf $0, um den Zugriff auf die Webkonsole zu ermöglichen."
  ],
  "Installing $0": [
   null,
@@ -421,6 +449,10 @@ window.cockpit_po = {
  "Internal error: Invalid challenge header": [
   null,
   "Interner Fehler: Ungültiger Challenge-Header"
+ ],
+ "Internal protocol error": [
+  null,
+  "Interner Protokollfehler"
  ],
  "Invalid date format": [
   null,
@@ -620,7 +652,7 @@ window.cockpit_po = {
  ],
  "Packageless session unavailable": [
   null,
-  ""
+  "Paketlose Sitzung nicht verfügbar"
  ],
  "Password": [
   null,
@@ -706,6 +738,10 @@ window.cockpit_po = {
   null,
   "Zuletzt genutzte Hosts"
  ],
+ "Refusing to connect": [
+  null,
+  "Verweigerung der Verbindung"
+ ],
  "Removals:": [
   null,
   "Umzüge:"
@@ -718,9 +754,17 @@ window.cockpit_po = {
   null,
   "Entfernen $0"
  ],
+ "Row expansion": [
+  null,
+  "Zeilenerweiterung"
+ ],
+ "Row select": [
+  null,
+  "Zeilenauswahl"
+ ],
  "Run this command over a trusted network or physically on the remote machine:": [
   null,
-  ""
+  "Führen Sie diesen Befehl über ein vertrauenswürdiges Netzwerk oder physisch auf dem entfernten Rechner aus:"
  ],
  "SELinux": [
   null,
@@ -730,6 +774,10 @@ window.cockpit_po = {
   null,
   "SSH-Schlüssel"
  ],
+ "SSH key login": [
+  null,
+  "SSH-Schlüssel-Anmeldung"
+ ],
  "Sealed-case PC": [
   null,
   "PC mit versiegeltem Gehäuse"
@@ -738,9 +786,17 @@ window.cockpit_po = {
   null,
   "Sicherheitsverstärkte Linuxkonfiguration und Problemlösung"
  ],
+ "Select an option": [
+  null,
+  "Wählen Sie eine Option aus"
+ ],
  "Server": [
   null,
   "Server"
+ ],
+ "Server closed connection": [
+  null,
+  "Server hat die Verbindung geschlossen"
  ],
  "Server has closed the connection.": [
   null,
@@ -757,6 +813,14 @@ window.cockpit_po = {
  "Shift+Insert": [
   null,
   "Shift+Einfügen"
+ ],
+ "Show confirmation password": [
+  null,
+  "Bestätigungspasswort anzeigen"
+ ],
+ "Show password": [
+  null,
+  "Passwort anzeigen"
  ],
  "Shut down": [
   null,
@@ -781,6 +845,10 @@ window.cockpit_po = {
  "Storage": [
   null,
   "Speicher"
+ ],
+ "Strong password": [
+  null,
+  "Starkes Passwort"
  ],
  "Sub-Chassis": [
   null,
@@ -822,6 +890,10 @@ window.cockpit_po = {
   null,
   "Der SSH-Schlüssel für die Anmeldung bei $0 ist geschützt. Sie können sich entweder mit Ihrem Anmeldepasswort oder mit dem Passwort des Schlüssels bei $1 anmelden."
  ],
+ "The fingerprint should match:": [
+  null,
+  "Der Fingerabdruck sollte übereinstimmen:"
+ ],
  "The key password can not be empty": [
   null,
   "Das Schlüsselpasswort darf nicht leer sein"
@@ -844,7 +916,7 @@ window.cockpit_po = {
  ],
  "The resulting fingerprint is fine to share via public methods, including email. If you are asking someone else to do the verification for you, they can send the results using any method.": [
   null,
-  ""
+  "Der resultierende Fingerabdruck kann über öffentliche Methoden, einschließlich E-Mail, weitergegeben werden. Wenn Sie eine andere Person bitten, die Überprüfung für Sie vorzunehmen, kann diese die Ergebnisse mit einer beliebigen Methode übermitteln."
  ],
  "The server refused to authenticate '$0' using password authentication, and no other supported authentication methods are available.": [
   null,
@@ -906,9 +978,9 @@ window.cockpit_po = {
   null,
   "Turm"
  ],
- "Transient packageless sessions require the same operating system and version, for compatibility reasons: $0.": [
+ "Trust and add host": [
   null,
-  ""
+  "Host vertrauen und hinzufügen"
  ],
  "Try again": [
   null,
@@ -922,6 +994,10 @@ window.cockpit_po = {
   null,
   "Es kann keine Verbindung zu dieser Adresse hergestellt werden"
  ],
+ "Unable to log in to $0 using SSH key authentication. Please provide the password.": [
+  null,
+  "Die Anmeldung bei $0 mit SSH-Schlüsselauthentifizierung ist nicht möglich. Bitte geben Sie das Passwort an."
+ ],
  "Unable to log in to $0. The host does not accept password login or any of your SSH keys.": [
   null,
   "Die Anmeldung bei $0 ist nicht möglich. Der Host akzeptiert weder ein Passwort noch einen Ihrer SSH-Schlüssel."
@@ -929,6 +1005,10 @@ window.cockpit_po = {
  "Unknown": [
   null,
   "Unbekannt"
+ ],
+ "Unknown host: $0": [
+  null,
+  "Unbekannter Host: $0"
  ],
  "Untrusted host": [
   null,
@@ -946,6 +1026,10 @@ window.cockpit_po = {
   null,
   "Authentifizierungstoken überprüfen"
  ],
+ "Verify fingerprint": [
+  null,
+  "Fingerabdruck verifizieren"
+ ],
  "View all logs": [
   null,
   "Alle Protokolle ansehen"
@@ -961,6 +1045,10 @@ window.cockpit_po = {
  "Waiting for other software management operations to finish": [
   null,
   "Warten, bis andere Software-Verwaltungsvorgänge abgeschlossen sind"
+ ],
+ "Weak password": [
+  null,
+  "Schwaches Passwort"
  ],
  "Web Console for Linux servers": [
   null,
@@ -1000,11 +1088,11 @@ window.cockpit_po = {
  ],
  "in less than a minute": [
   null,
-  ""
+  "in weniger als einer Minute"
  ],
  "less than a minute ago": [
   null,
-  ""
+  "vor weniger als einer Minute"
  ],
  "password quality": [
   null,

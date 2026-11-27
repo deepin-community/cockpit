@@ -948,10 +948,6 @@ window.cockpit_po = {
   null,
   "Компьютер в корпусе «башня»"
  ],
- "Transient packageless sessions require the same operating system and version, for compatibility reasons: $0.": [
-  null,
-  ""
- ],
  "Trust and add host": [
   null,
   "Доверять и добавить хост"

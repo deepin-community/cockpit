@@ -55,15 +55,16 @@ const client = {
 
 cockpit.event_target(client);
 
-client.run = (func) => {
-    const prom = func();
-    if (prom) {
-        client.busy += 1;
-        return prom.finally(() => {
-            client.busy -= 1;
-            client.dispatchEvent("changed");
-        });
-    }
+client.run = async (func) => {
+    if (client.in_anaconda_mode())
+        await btrfs_stop_monitoring();
+    const prom = func() || Promise.resolve();
+    client.busy += 1;
+    await prom.finally(() => {
+        client.busy -= 1;
+        btrfs_start_monitor();
+        client.dispatchEvent("changed");
+    });
 };
 
 /* Superuser
@@ -187,6 +188,7 @@ function init_proxies () {
     client.vdo_vols = proxies("VDOVolume");
     client.blocks_fsys_btrfs = proxies("Filesystem.BTRFS");
     client.jobs = proxies("Job");
+    client.nvme_controller = proxies("NVMe.Controller");
 
     return client.storaged_client.watch({ path_namespace: "/org/freedesktop/UDisks2" });
 }
@@ -306,9 +308,15 @@ function btrfs_update(data) {
         if (data[uuid].error) {
             console.warn("Error polling btrfs", uuid, data[uuid].error);
         } else {
-            uuids_subvols[uuid] = [{ pathname: "/", id: 5, parent: null }].concat(data[uuid].subvolumes);
-            uuids_usage[uuid] = data[uuid].usages;
-            default_subvol[uuid] = data[uuid].default_subvolume;
+            if (data[uuid].subvolumes) {
+                uuids_subvols[uuid] = [{ pathname: "/", id: 5, parent: null }].concat(data[uuid].subvolumes);
+            }
+            if (data[uuid].usages) {
+                uuids_usage[uuid] = data[uuid].usages;
+            }
+            if (data[uuid].default_subvolume) {
+                default_subvol[uuid] = data[uuid].default_subvolume;
+            }
         }
     }
 
@@ -344,10 +352,15 @@ export async function btrfs_poll() {
     btrfs_update(data);
 }
 
+let btrfs_monitor_channel = null;
+
 function btrfs_start_monitor() {
     if (!client.superuser.allowed || !client.features.btrfs) {
         return;
     }
+
+    if (btrfs_monitor_channel)
+        return;
 
     const channel = python.spawn(btrfs_tool_py, ["monitor", ...btrfs_poll_options()], { superuser: "require" });
     let buf = "";
@@ -365,6 +378,20 @@ function btrfs_start_monitor() {
     channel.catch(err => {
         throw new Error(err.toString());
     });
+
+    btrfs_monitor_channel = channel;
+}
+
+function btrfs_stop_monitoring() {
+    if (btrfs_monitor_channel) {
+        const res = btrfs_monitor_channel.then(() => {
+            btrfs_monitor_channel = null;
+        });
+        btrfs_monitor_channel.close();
+        return res;
+    } else {
+        return Promise.resolve();
+    }
 }
 
 function btrfs_start_polling() {
@@ -413,7 +440,17 @@ function is_toplevel_drive(block) {
 }
 
 function update_indices() {
-    let path, block, mdraid, vgroup, pvol, lvol, pool, blockdev, fsys, part, i;
+    let path;
+    let block;
+    let mdraid;
+    let vgroup;
+    let pvol;
+    let lvol;
+    let pool;
+    let blockdev;
+    let fsys;
+    let part;
+    let i;
 
     client.broken_multipath_present = false;
     client.drives_multipath_blocks = { };
@@ -568,12 +605,12 @@ function update_indices() {
         const struct = client.lvols[path].Structure;
         const lvol = client.lvols[path];
 
-        // HACK - UDisks2 can't find the PVs of a segment when they
-        //        are on a device mapper device.
+        // HACK - UDisks2 befopre 2.11 can't find the PVs of a segment
+        //        when they are on a device mapper device.
         //
         // https://github.com/storaged-project/udisks/pull/1206
 
-        if (vgroups_with_dm_pvs[lvol.VolumeGroup])
+        if (!client.at_least("2.11") && vgroups_with_dm_pvs[lvol.VolumeGroup])
             continue;
 
         let summary;
@@ -820,6 +857,8 @@ function update_indices() {
         const bfs = client.blocks_fsys_btrfs[p];
         const uuid = bfs.data.uuid;
         const block_fsys = client.blocks_fsys[p];
+        if (!uuid)
+            continue;
         if ((block_fsys && block_fsys.MountPoints.length > 0) || !client.uuids_btrfs_volume[uuid]) {
             client.uuids_btrfs_volume[uuid] = bfs;
             if (!old_uuids || !old_uuids[uuid])
@@ -835,11 +874,36 @@ function update_indices() {
     }
 }
 
+let lvm2_poll_timer = null;
+
+function update_lvm2_polling(for_visibility) {
+    const need_polling = !cockpit.hidden && !!Object.values(client.vgroups).find(vg => vg.NeedsPolling);
+
+    function poll() {
+        for (const path in client.vgroups) {
+            const vg = client.vgroups[path];
+            if (vg.NeedsPolling) {
+                vg.Poll();
+            }
+        }
+    }
+
+    if (need_polling && lvm2_poll_timer == null) {
+        lvm2_poll_timer = window.setInterval(poll, 2000);
+        if (for_visibility)
+            poll();
+    } else if (!need_polling && lvm2_poll_timer) {
+        window.clearInterval(lvm2_poll_timer);
+        lvm2_poll_timer = null;
+    }
+}
+
 client.update = (first_time) => {
     if (first_time)
         client.ready = true;
     if (client.ready) {
         update_indices();
+        update_lvm2_polling(false);
         reset_pages();
         make_overview_page();
         export_mount_point_mapping();
@@ -1010,6 +1074,7 @@ function init_model(callback) {
                     client.storaged_client.addEventListener('notify', () => client.update());
 
                     update_indices();
+                    cockpit.addEventListener("visibilitychange", () => update_lvm2_polling(true));
                     btrfs_poll().then(() => {
                         client.update(true);
                         callback();
@@ -1020,8 +1085,12 @@ function init_model(callback) {
     });
 }
 
-client.older_than = function older_than(version) {
+client.younger_than = function younger_than(version) {
     return utils.compare_versions(this.manager.Version, version) < 0;
+};
+
+client.at_least = function at_least(version) {
+    return utils.compare_versions(this.manager.Version, version) >= 0;
 };
 
 /* Mount users
@@ -1407,6 +1476,12 @@ function stratis3_start() {
                                                                                    "/org/storage/stratis3",
                                                                                    { watch: false });
 
+                // HACK - give us a sneak preview of the "r8"
+                // manager. It is used to start V2 pools.
+                client.stratis_manager_r8 = stratis.proxy(
+                    "org.storage.stratis3.Manager.r8",
+                    "/org/storage/stratis3");
+
                 return stratis.watch({ path_namespace: "/org/storage/stratis3" }).then(() => {
                     client.stratis_manager.client.addEventListener('notify', (event, data) => {
                         client.update();
@@ -1467,7 +1542,7 @@ client.strip_mount_point_prefix = (dir) => {
         if (dir.indexOf(mpp) != 0)
             return false;
 
-        dir = dir.substr(mpp.length);
+        dir = dir.substring(mpp.length);
         if (dir == "")
             dir = "/";
     }
