@@ -224,6 +224,10 @@ window.cockpit_po = {
   null,
   "インストールされたソフトウェアの確認中"
  ],
+ "Clear input value": [
+  null,
+  "入力値の消去"
+ ],
  "Close": [
   null,
   "閉じる"
@@ -780,6 +784,10 @@ window.cockpit_po = {
   null,
   "Security Enhanced Linux の設定とトラブルシューティング"
  ],
+ "Select an option": [
+  null,
+  "オプションの選択"
+ ],
  "Server": [
   null,
   "サーバー"
@@ -971,10 +979,6 @@ window.cockpit_po = {
  "Tower": [
   null,
   "タワー"
- ],
- "Transient packageless sessions require the same operating system and version, for compatibility reasons: $0.": [
-  null,
-  "一時的なパッケージレス セッションは、互換性の理由で同じ OS とバージョンが必要です: $0。"
  ],
  "Trust and add host": [
   null,

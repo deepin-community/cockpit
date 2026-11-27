@@ -20,7 +20,7 @@ DIST_STAMP = $(srcdir)/dist/static/manifest.json
 
 # dynamic pkg → dist dependency, to rebuild the bundles if any web related file changes
 # exclude automake unit test log files
-PKG_INPUTS = $(shell find $(srcdir)/pkg -type f ! -name 'test*.trs' ! -name 'test*.log')
+PKG_INPUTS = $(shell find $(srcdir)/pkg $(srcdir)/po -type f ! -name 'test*.trs' ! -name 'test*.log')
 
 V_BUNDLE = $(V_BUNDLE_$(V))
 V_BUNDLE_ = $(V_BUNDLE_$(AM_DEFAULT_VERBOSITY))
@@ -34,11 +34,10 @@ $(DIST_STAMP): $(srcdir)/package-lock.json $(PKG_INPUTS)
 
 EXTRA_DIST += build.js files.js package.json package-lock.json
 
-# don't install empty LEGAL.txt files, see https://github.com/evanw/esbuild/issues/3670
 INSTALL_DATA_LOCAL_TARGETS += install-bundles
 install-bundles:
-	cd $(srcdir)/dist; find */* -type f ! -name '*.LEGAL.txt' -exec install -D -m 644 '{}' '$(abspath $(DESTDIR)$(datadir))/cockpit/{}' \;
-	find $(srcdir)/dist -name '*.LEGAL.txt' ! -empty -exec install --target-directory '$(abspath $(DESTDIR)$(docdir))/legal' '{}' -D -m 644 '{}'  \;
+	cd $(srcdir)/dist; find */* -type f ! -name '*.LEGAL.txt' -a ! -path 'playground/*' -exec install -D -m 644 '{}' '$(abspath $(DESTDIR)$(datadir))/cockpit/{}' \;
+	find $(srcdir)/dist -name '*.LEGAL.txt' -exec install --target-directory '$(abspath $(DESTDIR)$(docdir))/legal' '{}' -D -m 644 '{}'  \;
 
 UNINSTALL_LOCAL_TARGETS += uninstall-bundles
 uninstall-bundles:

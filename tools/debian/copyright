@@ -32,71 +32,70 @@ License: CC0-1.0
 Files: dist/apps/*
 Copyright: (c) Facebook, Inc. and its affiliates.
  2015-2016 David Clark
- Copyright (C) 2013 - 2024 Red Hat, Inc.
+ Copyright (C) 2013 - 2025 Red Hat, Inc.
  Facebook, Inc. and its affiliates.
 License: LGPL-2.1-or-later and MIT
 
 Files: dist/kdump/*
 Copyright: (c) Facebook, Inc. and its affiliates.
  2015-2016 David Clark
- Copyright (C) 2013 - 2024 Red Hat, Inc.
+ Copyright (C) 2013 - 2025 Red Hat, Inc.
  Facebook, Inc. and its affiliates.
 License: LGPL-2.1-or-later and MIT
 
 Files: dist/metrics/*
 Copyright: (c) Facebook, Inc. and its affiliates.
  2015-2016 David Clark
- Copyright (C) 2013 - 2024 Red Hat, Inc.
+ Copyright (C) 2013 - 2025 Red Hat, Inc.
  Facebook, Inc. and its affiliates.
 License: LGPL-2.1-or-later and MIT
 
 Files: dist/networkmanager/*
 Copyright: (c) Facebook, Inc. and its affiliates.
  2015-2016 David Clark
- Copyright (C) 2013 - 2024 Red Hat, Inc.
+ Copyright (C) 2013 - 2025 Red Hat, Inc.
  Facebook, Inc. and its affiliates.
 License: LGPL-2.1-or-later and MIT
 
 Files: dist/packagekit/*
 Copyright: (c) Facebook, Inc. and its affiliates.
  2015-2016 David Clark
- Copyright (C) 2013 - 2024 Red Hat, Inc.
+ Copyright (C) 2013 - 2025 Red Hat, Inc.
  Facebook, Inc. and its affiliates.
 License: LGPL-2.1-or-later and MIT
 
 Files: dist/playground/*
 Copyright: (c) Facebook, Inc. and its affiliates.
  2015-2016 David Clark
- Copyright (C) 2013 - 2024 Red Hat, Inc.
+ Copyright (C) 2013 - 2025 Red Hat, Inc.
  Facebook, Inc. and its affiliates.
 License: LGPL-2.1-or-later and MIT
 
 Files: dist/selinux/*
 Copyright: (c) Facebook, Inc. and its affiliates.
  2015-2016 David Clark
- Copyright (C) 2013 - 2024 Red Hat, Inc.
+ Copyright (C) 2013 - 2025 Red Hat, Inc.
  Facebook, Inc. and its affiliates.
 License: LGPL-2.1-or-later and MIT
 
 Files: dist/shell/*
 Copyright: (c) Facebook, Inc. and its affiliates.
  2015-2016 David Clark
- Copyright (C) 2013 - 2024 Red Hat, Inc.
+ Copyright (C) 2013 - 2025 Red Hat, Inc.
  Facebook, Inc. and its affiliates.
 License: LGPL-2.1-or-later and MIT
 
 Files: dist/sosreport/*
 Copyright: (c) Facebook, Inc. and its affiliates.
  2015-2016 David Clark
- Copyright (C) 2013 - 2024 Red Hat, Inc.
+ Copyright (C) 2013 - 2025 Red Hat, Inc.
  Facebook, Inc. and its affiliates.
 License: LGPL-2.1-or-later and MIT
 
 Files: dist/storaged/*
 Copyright: (c) Facebook, Inc. and its affiliates.
  2015-2016 David Clark
- Chen, Yi-Cyuan 2014-2024
- Copyright (C) 2013 - 2024 Red Hat, Inc.
+ Copyright (C) 2013 - 2025 Red Hat, Inc.
  Facebook, Inc. and its affiliates.
 License: LGPL-2.1-or-later and MIT
 
@@ -109,14 +108,14 @@ Copyright: (c) 2011 Fabrice Bellard
  2012-2013, Christopher Jeffrey (MIT License)
  2014 The xterm.js authors. All rights reserved.
  2015-2016 David Clark
- Copyright (C) 2013 - 2024 Red Hat, Inc.
+ Copyright (C) 2013 - 2025 Red Hat, Inc.
  Facebook, Inc. and its affiliates.
 License: LGPL-2.1-or-later and MIT
 
 Files: dist/users/*
 Copyright: (c) Facebook, Inc. and its affiliates.
  2015-2016 David Clark
- Copyright (C) 2013 - 2024 Red Hat, Inc.
+ Copyright (C) 2013 - 2025 Red Hat, Inc.
  Facebook, Inc. and its affiliates.
 License: LGPL-2.1-or-later and MIT
 

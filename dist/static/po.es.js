@@ -120,7 +120,7 @@ window.cockpit_po = {
  ],
  "Accept key and log in": [
   null,
-  "Aceptar la clave y loguearse"
+  "Aceptar la clave y acceder"
  ],
  "Acceptable password": [
   null,
@@ -168,7 +168,7 @@ window.cockpit_po = {
  ],
  "Authorize SSH key": [
   null,
-  "Autorizar la clave SSH"
+  "Autorice la clave SSH"
  ],
  "Automatically using NTP": [
   null,
@@ -229,6 +229,10 @@ window.cockpit_po = {
  "Checking installed software": [
   null,
   "Comprobando el software instalado"
+ ],
+ "Clear input value": [
+  null,
+  "Vaciar valor de entrada"
  ],
  "Close": [
   null,
@@ -318,9 +322,13 @@ window.cockpit_po = {
   null,
   "Copiar al portapapeles"
  ],
+ "Create $0": [
+  null,
+  "Crear $0"
+ ],
  "Create a new SSH key and authorize it": [
   null,
-  "Crear una clave SSH y autorizarla"
+  "Crear una clave SSH nueva y autorícela"
  ],
  "Create new task file with this content.": [
   null,
@@ -398,9 +406,21 @@ window.cockpit_po = {
   null,
   "Ocultar contraseña"
  ],
+ "Host is unknown": [
+  null,
+  "Hospedaje desconocido"
+ ],
  "Host key is incorrect": [
   null,
   "La tecla del anfitrión es incorrecta"
+ ],
+ "Hostkey does not match": [
+  null,
+  "Tecla del hospedaje no coincide"
+ ],
+ "Hostkey is unknown": [
+  null,
+  "Tecla del hospedaje es desconocida"
  ],
  "If the fingerprint matches, click \"Accept key and log in\". Otherwise, do not log in and contact your administrator.": [
   null,
@@ -420,7 +440,7 @@ window.cockpit_po = {
  ],
  "Install the cockpit-system package (and optionally other cockpit packages) on $0 to enable web console access.": [
   null,
-  ""
+  "Instalar el paquete de cockpit-system (y opcionalmente otros paquetes de cockpit) en $0 para renombrar el acceso a la consola web."
  ],
  "Installing $0": [
   null,
@@ -434,6 +454,10 @@ window.cockpit_po = {
   null,
   "Error Interno: Encabezado del reto no valido"
  ],
+ "Internal protocol error": [
+  null,
+  "Error de protocolo interno"
+ ],
  "Invalid date format": [
   null,
   "Formato de fecha inválido"
@@ -444,7 +468,7 @@ window.cockpit_po = {
  ],
  "Invalid file permissions": [
   null,
-  "Permisos de archivo invalidos"
+  "Permisos de archivo inválido"
  ],
  "Invalid time format": [
   null,
@@ -632,7 +656,7 @@ window.cockpit_po = {
  ],
  "Packageless session unavailable": [
   null,
-  ""
+  "Sesión sin empaquetado no disponible"
  ],
  "Password": [
   null,
@@ -718,17 +742,29 @@ window.cockpit_po = {
   null,
   "Anfitriones recientes"
  ],
+ "Refusing to connect": [
+  null,
+  "Rechazando conexión"
+ ],
  "Removals:": [
   null,
   "Borrados:"
  ],
  "Remove host": [
   null,
-  "Eliminar anfitrión"
+  "Retirar hospedaje"
  ],
  "Removing $0": [
   null,
   "Eliminando $0"
+ ],
+ "Row expansion": [
+  null,
+  "Fila de expansión"
+ ],
+ "Row select": [
+  null,
+  "Seleccionar fila"
  ],
  "Run this command over a trusted network or physically on the remote machine:": [
   null,
@@ -742,6 +778,10 @@ window.cockpit_po = {
   null,
   "Clave SSH"
  ],
+ "SSH key login": [
+  null,
+  "Clave SSH de acceso"
+ ],
  "Sealed-case PC": [
   null,
   "PC de caja sellada"
@@ -750,9 +790,17 @@ window.cockpit_po = {
   null,
   "Configuración de Security Enhanced Linux y resolución de problemas"
  ],
+ "Select an option": [
+  null,
+  "Seleccione una opción"
+ ],
  "Server": [
   null,
   "Servidor"
+ ],
+ "Server closed connection": [
+  null,
+  "El servidor ha cerrado la conexión"
  ],
  "Server has closed the connection.": [
   null,
@@ -890,6 +938,10 @@ window.cockpit_po = {
   null,
   "Esta herramienta configura la política de SELinux y puede ayudarle a comprender y resolver infracciones de la política."
  ],
+ "This tool configures the system to write kernel crash dumps. It supports the \"local\" (disk), \"ssh\", and \"nfs\" dump targets.": [
+  null,
+  "Esta herramienta configura el sistema para que escriba los volcados de colapso del kernel. Admite volcados de destino\"local\" (disco), \"ssh\" y \"nfs\"."
+ ],
  "This tool generates an archive of configuration and diagnostic information from the running system. The archive may be stored locally or centrally for recording or tracking purposes or may be sent to technical support representatives, developers or system administrators to assist with technical fault-finding and debugging.": [
   null,
   "Esta herramienta genera un archivo de configuración e información de diagnóstico del sistema en ejecución. El archivo puede ser almacenado localmente o centralmente para propósitos de registro o seguimiento, o puede ser enviado a representantes de soporte técnico, desarrolladores o administradores de sistemas para asistir con la detección de fallos y su corrección."
@@ -934,10 +986,6 @@ window.cockpit_po = {
   null,
   "Torre"
  ],
- "Transient packageless sessions require the same operating system and version, for compatibility reasons: $0.": [
-  null,
-  ""
- ],
  "Trust and add host": [
   null,
   "Confiar en el anfitrión y añadirlo"
@@ -954,13 +1002,21 @@ window.cockpit_po = {
   null,
   "No se pudo realizar una conexión con esa dirección"
  ],
+ "Unable to log in to $0 using SSH key authentication. Please provide the password.": [
+  null,
+  "No se pudo iniciar sesión en $0 usando autenticación por clave SSH. Por favor, introduzca la contraseña."
+ ],
  "Unable to log in to $0. The host does not accept password login or any of your SSH keys.": [
   null,
-  "No se pudo iniciar sesión en $0. El servidor no acepta inicio de sesión por contraseña ni ninguna de tus claves SSH."
+  "No fue capaz de iniciar sesión en $0. El hospedaje no acepta inicio de sesión por contraseña ni ninguna de sus claves SSH."
  ],
  "Unknown": [
   null,
   "Desconocido"
+ ],
+ "Unknown host: $0": [
+  null,
+  "Hospedaje desconocido: $0"
  ],
  "Untrusted host": [
   null,
@@ -1040,11 +1096,11 @@ window.cockpit_po = {
  ],
  "in less than a minute": [
   null,
-  ""
+  "es menos de un minuto"
  ],
  "less than a minute ago": [
   null,
-  ""
+  "es menos que hace un minuto"
  ],
  "password quality": [
   null,

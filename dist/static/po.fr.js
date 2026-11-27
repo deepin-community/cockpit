@@ -230,6 +230,10 @@ window.cockpit_po = {
   null,
   "Vérification des logiciels installés"
  ],
+ "Clear input value": [
+  null,
+  "Effacer la valeur saisie"
+ ],
  "Close": [
   null,
   "Fermer"
@@ -400,7 +404,7 @@ window.cockpit_po = {
  ],
  "Hide password": [
   null,
-  "Masquer le mot de passe."
+  "Masquer le mot de passe"
  ],
  "Host is unknown": [
   null,
@@ -786,6 +790,10 @@ window.cockpit_po = {
   null,
   "Configuration et dépannage de Linux avec renforcement de la sécurité"
  ],
+ "Select an option": [
+  null,
+  "Sélectionner une option"
+ ],
  "Server": [
   null,
   "Serveur"
@@ -977,10 +985,6 @@ window.cockpit_po = {
  "Tower": [
   null,
   "Tower"
- ],
- "Transient packageless sessions require the same operating system and version, for compatibility reasons: $0.": [
-  null,
-  "Pour des raisons de compatibilité, les systèmes d'exploitation utilisés et leur version doivent correspondre afin de pouvoir utiliser les sessions packageless transitoires : $0."
  ],
  "Trust and add host": [
   null,

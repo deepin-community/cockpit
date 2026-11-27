@@ -912,10 +912,6 @@ window.cockpit_po = {
   null,
   "Tower"
  ],
- "Transient packageless sessions require the same operating system and version, for compatibility reasons: $0.": [
-  null,
-  ""
- ],
  "Trust and add host": [
   null,
   "Zaufaj i dodaj komputer"

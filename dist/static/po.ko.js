@@ -22,7 +22,7 @@ window.cockpit_po = {
  ],
  "$0 failed": [
   null,
-  "$0가 실패"
+  "$0 실패"
  ],
  "$0 hour": [
   null,
@@ -30,7 +30,7 @@ window.cockpit_po = {
  ],
  "$0 is not available from any repository.": [
   null,
-  "$0는 저장소에서 사용 할 수 없습니다."
+  "$0 는 저장소에서 사용 할 수 없습니다."
  ],
  "$0 key changed": [
   null,
@@ -38,7 +38,7 @@ window.cockpit_po = {
  ],
  "$0 killed with signal $1": [
   null,
-  "$1 시그널에 의해 $0가 종료되었습니다"
+  "$1 시그널에 의해 $0 가 종료되었습니다"
  ],
  "$0 minute": [
   null,
@@ -54,7 +54,7 @@ window.cockpit_po = {
  ],
  "$0 will be installed.": [
   null,
-  "$0가 설치됩니다."
+  "$0 가 설치됩니다."
  ],
  "$0 year": [
   null,
@@ -98,7 +98,7 @@ window.cockpit_po = {
  ],
  "A compatible version of Cockpit is not installed on $0.": [
   null,
-  "호환 가능한 Cockpit 버전이 {{#strong}}에 설치되어 있지 않습니다."
+  "호환 가능한 Cockpit 버전이 $0 에서 설치되지 않았습니다."
  ],
  "A modern browser is required for security, reliability, and performance.": [
   null,
@@ -106,7 +106,7 @@ window.cockpit_po = {
  ],
  "A new SSH key at $0 will be created for $1 on $2 and it will be added to the $3 file of $4 on $5.": [
   null,
-  "$0에서 신규 SSH 키는 $1에서($2에 대해) 생성되고 $3에서 $4에서($5에 대해) 파일에 추가됩니다."
+  "$0 에서 신규 SSH 키는 $1 에서($2 에 대해) 생성되고 $3 파일($4 의($5 에 대한))에 추가됩니다."
  ],
  "Absent": [
   null,
@@ -223,6 +223,10 @@ window.cockpit_po = {
  "Checking installed software": [
   null,
   "설치된 소프트웨어 확인 중"
+ ],
+ "Clear input value": [
+  null,
+  "입력 값 초기화"
  ],
  "Close": [
   null,
@@ -430,7 +434,7 @@ window.cockpit_po = {
  ],
  "Install the cockpit-system package (and optionally other cockpit packages) on $0 to enable web console access.": [
   null,
-  "웹 콘솔 접근을 활성화 하도록 $0에 cockpit-system 꾸러미(및 선택적인 다른 cockpit 꾸러미)를 설치합니다."
+  "웹 콘솔 접근을 활성화 하도록 $0 에 cockpit-system 꾸러미(및 선택적인 다른 cockpit 꾸러미)를 설치합니다."
  ],
  "Installing $0": [
   null,
@@ -498,7 +502,7 @@ window.cockpit_po = {
  ],
  "Log in to $0": [
   null,
-  "$0에 로그인"
+  "$0 로 로그인"
  ],
  "Log in with your server user account.": [
   null,
@@ -780,6 +784,10 @@ window.cockpit_po = {
   null,
   "보안이 향상된 리눅스 구성과 문제해결"
  ],
+ "Select an option": [
+  null,
+  "옵션을 선택합니다"
+ ],
  "Server": [
   null,
   "서버"
@@ -854,7 +862,7 @@ window.cockpit_po = {
  ],
  "Synchronized with $0": [
   null,
-  "$0와 동기화됩니다"
+  "$0 와 동기화됩니다"
  ],
  "Synchronizing": [
   null,
@@ -866,19 +874,19 @@ window.cockpit_po = {
  ],
  "The SSH key $0 of $1 on $2 will be added to the $3 file of $4 on $5.": [
   null,
-  "$1의 SSH 키 $0 ($2에서)는 $4의 $3 ($5에서)파일로 추가됩니다."
+  "$1 의 SSH 키 $0 ($2 에서)는 $4 의 $3 ($5 에서)파일로 추가됩니다."
  ],
  "The SSH key $0 will be made available for the remainder of the session and will be available for login to other hosts as well.": [
   null,
-  "SSH 키 $0는 나머지 세션에서 사용 할 수 있고 다른 호스트에 로그인 할 때에도 사용 할 수 있습니다."
+  "SSH 키 $0 는 세션의 나머지 부분에서 사용 할 수 있고 다른 호스트에 로그인 할 때에도 사용 할 수 있습니다."
  ],
  "The SSH key for logging in to $0 is protected by a password, and the host does not allow logging in with a password. Please provide the password of the key at $1.": [
   null,
-  "$0에 로그인하기 위한 SSH 키가 비밀번호에 의해 보호되고 있으며, 그리고 호스트는 비밀번호로 로그인을 허용 하지 않습니다. $1에서 키의 비밀번호를 제공하세요."
+  "$0 에 로그인하기 위한 SSH 키가 비밀번호에 의해 보호되고 있으며, 그리고 호스트는 비밀번호로 로그인을 허용 하지 않습니다. $1 에서 키의 비밀번호를 제공하세요."
  ],
  "The SSH key for logging in to $0 is protected. You can log in with either your login password or by providing the password of the key at $1.": [
   null,
-  "$0에 로그인하기 위해 SSH 키가 보호되고 있습니다. 당신은 $1에서 자신의 로그인 비밀번호에 의하거나 키의 비밀번호 제공을 통해 로그인 할 수 있습니다.."
+  "$0 에 로그인하기 위해 SSH 키가 보호되고 있습니다. 당신은 $1 에서 자신의 로그인 비밀번호에 의하거나 키의 비밀번호 제공을 통해 로그인 할 수 있습니다.."
  ],
  "The fingerprint should match:": [
   null,
@@ -954,7 +962,7 @@ window.cockpit_po = {
  ],
  "To verify a fingerprint, run the following on $0 while physically sitting at the machine or through a trusted network:": [
   null,
-  "지문을 확인하려면 물리적인 장치 또는 신뢰할 수 있는 네트워크를 통해 $0에서 다음을 실행합니다:"
+  "지문을 확인하려면 물리적인 장치 또는 신뢰할 수 있는 네트워크를 통해 $0 에서 다음을 실행합니다:"
  ],
  "Toggle date picker": [
   null,
@@ -972,10 +980,6 @@ window.cockpit_po = {
   null,
   "타워"
  ],
- "Transient packageless sessions require the same operating system and version, for compatibility reasons: $0.": [
-  null,
-  "일시적으로 꾸러미 없는 세션은 호환성 원인으로 동일한 운영체제 및 버전이 필요합니다: $0."
- ],
  "Trust and add host": [
   null,
   "호스트 신뢰 및 추가"
@@ -986,7 +990,7 @@ window.cockpit_po = {
  ],
  "Trying to synchronize with $0": [
   null,
-  "$0와 동기화를 시도 중입니다"
+  "$0 와 동기화를 시도 중입니다"
  ],
  "Unable to connect to that address": [
   null,
@@ -994,11 +998,11 @@ window.cockpit_po = {
  ],
  "Unable to log in to $0 using SSH key authentication. Please provide the password.": [
   null,
-  "SSH 키 인증을 사용하여 $0에 로그인 할 수 없습니다. 비밀번호를 입력하세요."
+  "SSH 키 인증을 사용하여 $0 에 로그인 할 수 없습니다. 비밀번호를 입력하세요."
  ],
  "Unable to log in to $0. The host does not accept password login or any of your SSH keys.": [
   null,
-  "$0에 로그인 할 수 없습니다. 호스트는 비밀번호 로그인 또는 자신의 SSH 키를 허용하지 않습니다."
+  "$0 에 로그인 할 수 없습니다. 호스트는 비밀번호 로그인 또는 자신의 SSH 키를 허용하지 않습니다."
  ],
  "Unknown": [
   null,
@@ -1058,7 +1062,7 @@ window.cockpit_po = {
  ],
  "You are connecting to $0 for the first time.": [
   null,
-  "처음으로 $0에 연결됩니다."
+  "처음으로 $0 에 연결됩니다."
  ],
  "Your browser does not allow paste from the context menu. You can use Shift+Insert.": [
   null,

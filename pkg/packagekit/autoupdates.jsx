@@ -24,7 +24,9 @@ import { Button } from "@patternfly/react-core/dist/esm/components/Button/index.
 import { Flex, FlexItem } from "@patternfly/react-core/dist/esm/layouts/Flex/index.js";
 import { Form, FormGroup } from "@patternfly/react-core/dist/esm/components/Form/index.js";
 import { FormSelect, FormSelectOption } from "@patternfly/react-core/dist/esm/components/FormSelect/index.js";
-import { Modal } from "@patternfly/react-core/dist/esm/components/Modal/index.js";
+import {
+    Modal
+} from '@patternfly/react-core/dist/esm/deprecated/components/Modal/index.js';
 import { Radio } from "@patternfly/react-core/dist/esm/components/Radio/index.js";
 import { TimePicker } from "@patternfly/react-core/dist/esm/components/TimePicker/index.js";
 
@@ -32,12 +34,9 @@ import { install_dialog } from "cockpit-components-install-dialog.jsx";
 import { useDialogs } from "dialogs.jsx";
 import { useInit } from "hooks";
 
-const _ = cockpit.gettext;
+import { debug } from "./utils";
 
-function debug() {
-    if (window.debugging == "all" || window.debugging?.includes("packagekit"))
-        console.debug.apply(console, arguments);
-}
+const _ = cockpit.gettext;
 
 /**
  * Package manager specific implementations; PackageKit does not cover
@@ -123,7 +122,7 @@ class Dnf4Impl extends ImplBase {
             // if we have OnCalendar=, use that (we disable OnUnitInactiveSec= in our drop-in)
             const calIdx = output.indexOf("OnCalendar=");
             if (calIdx >= 0) {
-                this.parseCalendar(output.substr(calIdx).split('\n')[0].split("=")[1]);
+                this.parseCalendar(output.substring(calIdx).split('\n')[0].split("=")[1]);
             } else {
                 if (output.indexOf("InactiveSec=1d\n") >= 0)
                     this.day = this.time = "";
@@ -253,7 +252,7 @@ class Dnf5Impl extends ImplBase {
             // if we have OnCalendar=, use that (we disable OnUnitInactiveSec= in our drop-in)
             const calIdx = output.indexOf("OnCalendar=");
             if (calIdx >= 0) {
-                this.parseCalendar(output.substr(calIdx).split('\n')[0].split("=")[1]);
+                this.parseCalendar(output.substring(calIdx).split('\n')[0].split("=")[1]);
             } else {
                 if (output.indexOf("InactiveSec=1d\n") >= 0)
                     this.day = this.time = "";

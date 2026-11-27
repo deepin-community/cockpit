@@ -1,14 +1,130 @@
-cockpit (328-1deepin2) unstable; urgency=medium
+cockpit (337-1+deb13u2) trixie-security; urgency=medium
 
-  * Fix CVE-2026-4631: SSH injection vulnerability in remote login
+  * ws: Free "language" string also when it comes from the cookie.
+    Fixes remote unauthenticated DoS and huge memory usage (throttled at 75%
+    and capped at 90% via systemd slice resource control).
+    [CVE-2026-76235] (Closes: #1144975)
+  * pkg/systemd: robustify argument quoting.  Fixes arbitrary command
+    execution via crafted links to the system logs user interface.
+    Patch backported from upstream commit e3a47d70f99a0d, and hand-applied in
+    debian/rules to the built bundle, as this branch does not yet rebuild
+    the bundles during package build. [CVE-2026-4802]
+    has no effect; instead apply the equivalent change to the shipped
+    dist/systemd/logs.js.gz via sed in debian/rules.
 
- -- deepin-ci-robot <packages@deepin.org>  Wed, 15 Apr 2026 13:21:26 +0800
+ -- Martin Pitt <mpitt@debian.org>  Tue, 25 Aug 2026 08:35:13 +0200
 
-cockpit (328-1deepin1) unstable; urgency=medium
+cockpit (337-1+deb13u1) trixie; urgency=medium
 
-  * Disable make package lock json in debian build.
+  * ws: Be more explicit when handling hostnames on cli.
+    [CVE-2026-4631] (Closes: #1133022, #1133122)
 
- -- xiangzelong <xiangzelong@deepin.org>  Fri, 15 Nov 2024 13:51:10 +0800
+ -- Martin Pitt <mpitt@debian.org>  Thu, 09 Apr 2026 05:29:56 +0200
+
+cockpit (337-1) unstable; urgency=medium
+
+  * New upstream release:
+    - Upgraded to Patternfly 6
+    - Support "dnf needs-restarting"
+
+ -- Martin Pitt <mpitt@debian.org>  Wed, 23 Apr 2025 14:11:05 +0000
+
+cockpit (336-1) unstable; urgency=medium
+
+  * New upstream release:
+    - storage: Implement deletion of multi-device btrfs
+    - Add a channel capabilities system
+
+ -- Martin Pitt <mpitt@debian.org>  Mon, 24 Mar 2025 08:20:30 +0100
+
+cockpit (335-2) unstable; urgency=medium
+
+  * Fix --build={all,any} FTBFS. cockpit-bridge moved to "Architecture: all",
+    adjust the pytest invocation accordingly.
+
+ -- Martin Pitt <mpitt@debian.org>  Wed, 12 Mar 2025 15:49:56 +0100
+
+cockpit (335-1) unstable; urgency=medium
+
+  * New upstream release:
+    - storage: SMART support
+
+ -- Martin Pitt <mpitt@debian.org>  Wed, 12 Mar 2025 14:27:08 +0100
+
+cockpit (334-1) unstable; urgency=medium
+
+  * New upstream release:
+    - Don't call sudo automatically three times (RHEL-32834)
+
+ -- Martin Pitt <mpitt@debian.org>  Thu, 27 Feb 2025 09:37:46 +0000
+
+cockpit (333-1) unstable; urgency=medium
+
+  * New upstream bug fix release.
+
+ -- Martin Pitt <mpitt@debian.org>  Thu, 13 Feb 2025 09:37:49 +0000
+
+cockpit (332-1) unstable; urgency=medium
+
+  * New upstream release:
+    - containers/ws: Include cockpit-files
+    - login: Beibooting to all supported OSes
+    - metrics: Show system boots in metrics
+
+ -- Martin Pitt <mpitt@debian.org>  Thu, 30 Jan 2025 18:54:31 +0000
+
+cockpit (331-1) unstable; urgency=medium
+
+  * New upstream release:
+    - ws: Prevent search engine indexing with robots.txt
+    - Drop cockpit-tests binary package
+
+ -- Martin Pitt <mpitt@debian.org>  Wed, 18 Dec 2024 11:42:34 +0000
+
+cockpit (330-4) unstable; urgency=medium
+
+  * autopkgtest: Drop unit start test with LXC on Debian 12.
+    The attempted workaround does not suffice with LXC 5 on Debian 12 any
+    more (see #1073815). The units fail with "Failed to update dynamic user
+    credentials: Permission denied". Also, this was becoming ridiculous, and
+    not really testing the package any more.
+    Give up and skip that part of the text under these conditions. It will
+    still run in QEMU runners (such as in Ubuntu or some Debian
+    architectures).
+
+ -- Martin Pitt <mpitt@debian.org>  Tue, 10 Dec 2024 11:11:50 +0000
+
+cockpit (330-3) unstable; urgency=medium
+
+  * autopkgtest: Fix LXC DynamicUser hack
+
+ -- Martin Pitt <mpitt@debian.org>  Tue, 10 Dec 2024 07:16:59 +0000
+
+cockpit (330-2) unstable; urgency=medium
+
+  * autopkgtest: Adjust workaround for LXC bug.
+    Cockpit 330 changes the systemd unit structure wrt. DynamicUser=. The
+    LXC bug is still present, so bring back the hack and adjust it to the
+    current dynamic users.
+  * Declare file conflict with cockpit-tests.
+    cockpit-session.socket moved from -tests to -ws in 330. (Closes: #1089220)
+
+ -- Martin Pitt <mpitt@debian.org>  Mon, 09 Dec 2024 11:46:17 +0000
+
+cockpit (330-1) unstable; urgency=medium
+
+  * New upstream release:
+    - Web server: Increased sandboxing, setuid removal, bootc support
+    - Development: New install mode using systemd-sysext
+
+ -- Martin Pitt <mpitt@debian.org>  Wed, 04 Dec 2024 13:58:53 +0100
+
+cockpit (329-1) unstable; urgency=medium
+
+  * New upstream release:
+    - Shell: Extra warnings when connecting to remote hosts
+
+ -- Martin Pitt <mpitt@debian.org>  Wed, 20 Nov 2024 16:12:31 +0100
 
 cockpit (328-1) unstable; urgency=medium
 

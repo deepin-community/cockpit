@@ -25,7 +25,7 @@ import * as timeformat from "timeformat";
 const _ = cockpit.gettext;
 const C_ = cockpit.gettext;
 
-export const BTRFS_TOOL_MOUNT_PATH = "/var/lib/cockpit/btrfs/";
+export const BTRFS_TOOL_MOUNT_PATH = "/run/cockpit/btrfs/";
 
 /* UTILITIES
  */
@@ -73,7 +73,8 @@ export function extract_option(split, opt) {
 }
 
 export function edit_crypto_config(block, modify) {
-    let old_config, new_config;
+    let old_config;
+    let new_config;
 
     function commit() {
         new_config[1]["track-parents"] = { t: 'b', v: true };
@@ -306,7 +307,9 @@ export function drive_name(drive) {
 }
 
 export function get_block_link_parts(client, path) {
-    let is_part, is_crypt, is_lvol;
+    let is_part;
+    let is_crypt;
+    let is_lvol;
 
     while (true) {
         if (client.blocks_part[path] && client.blocks_ptable[client.blocks_part[path].Table]) {
@@ -326,7 +329,8 @@ export function get_block_link_parts(client, path) {
     if (!block)
         return;
 
-    let location, link;
+    let location;
+    let link;
     if (client.mdraids[block.MDRaid]) {
         location = ["mdraid", client.mdraids[block.MDRaid].UUID];
         link = cockpit.format(_("MDRAID device $0"), mdraid_name(client.mdraids[block.MDRaid]));
@@ -384,7 +388,11 @@ export function get_partitions(client, block) {
         let n;
         let last_end = container_start;
         const total_end = container_start + container_size;
-        let block, start, size, is_container, is_contained;
+        let block;
+        let start;
+        let size;
+        let is_container;
+        let is_contained;
 
         const result = [];
 
@@ -517,7 +525,10 @@ export function get_available_spaces(client) {
 
     function add_free_spaces(block) {
         const parts = get_partitions(client, block);
-        let i, p, link_parts, text;
+        let i;
+        let p;
+        let link_parts;
+        let text;
         for (i in parts) {
             p = parts[i];
             if (p.type == 'free') {
@@ -666,13 +677,27 @@ export function is_netdev(client, path) {
 }
 
 export function should_ignore(client, path) {
+    const block = client.blocks[path];
+
+    // HACK - https://github.com/stratis-storage/stratisd/issues/3801
+    //
+    // Filter out Stratis private device mapper devices. This normally
+    // happens by setting the DM_UDEV_DISABLE_OTHER_RULES_FLAG in the
+    // udev database (which causes UDisks2 to ignore the block
+    // device), but since Stratis 3.8 the "*-crypt" devices don't have
+    // them.
+
+    if (block && decode_filename(block.PreferredDevice).startsWith("/dev/mapper/stratis-1-private"))
+        return true;
+
+    // Check what Anaconda tells us.
+
     if (!client.in_anaconda_mode())
         return false;
 
     const parents = get_direct_parent_blocks(client, path);
     if (parents.length == 0) {
-        const b = client.blocks[path];
-        return b && client.should_ignore_block(b);
+        return block && client.should_ignore_block(block);
     } else {
         return parents.some(p => should_ignore(client, p));
     }
@@ -837,7 +862,7 @@ export function get_fstab_config_with_client(client, block, also_child_config, s
         return [];
 }
 
-export function get_active_usage(client, path, top_action, child_action, is_temporary, subvol) {
+export function get_active_usage(client, path, top_action, child_action, is_temporary, subvol, allow_multi_device_delete) {
     function get_usage(usage, path, level) {
         const block = client.blocks[path];
         const fsys = client.blocks_fsys[path];
@@ -898,7 +923,7 @@ export function get_active_usage(client, path, top_action, child_action, is_temp
 
         // We allow a btrfs volume with one device to be formatted as this
         // looks the most like a normal filesystem use case.
-        if (btrfs_volume && btrfs_volume.data.num_devices !== 1 && !subvol) {
+        if (btrfs_volume && btrfs_volume.data.num_devices !== 1 && !subvol && !allow_multi_device_delete) {
             usage.push({
                 level,
                 usage: 'btrfs-device',
@@ -1150,7 +1175,10 @@ export function get_byte_units(guide_value) {
         { factor: 1000 ** 4, name: "TB" },
     ];
     // Find the biggest unit which gives two digits left of the decimal point (>= 10)
-    const unit = units.findLastIndex(unit => guide_value / unit.factor >= 10);
+    let unit;
+    for (unit = units.length - 1; unit >= 0; unit--)
+        if (guide_value / units[unit].factor >= 10)
+            break;
     // Mark it selected.  If we couldn't find one (-1), then use MB.
     units[Math.max(0, unit)].selected = true;
     return units;

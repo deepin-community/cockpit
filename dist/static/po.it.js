@@ -122,6 +122,10 @@ window.cockpit_po = {
   null,
   "Accetta la chiave ed effettua l'accesso"
  ],
+ "Acceptable password": [
+  null,
+  "Password accettabile"
+ ],
  "Add $0": [
   null,
   "Aggiungi $0"
@@ -194,6 +198,10 @@ window.cockpit_po = {
   null,
   "Bus di espansione chassis"
  ],
+ "Bypass browser check": [
+  null,
+  "Ignora il controllo del browser"
+ ],
  "Cancel": [
   null,
   "Annulla"
@@ -221,6 +229,10 @@ window.cockpit_po = {
  "Checking installed software": [
   null,
   "Verifica del software installato"
+ ],
+ "Clear input value": [
+  null,
+  "Cancella il valore immesso"
  ],
  "Close": [
   null,
@@ -310,6 +322,10 @@ window.cockpit_po = {
   null,
   "Copia negli appunti"
  ],
+ "Create $0": [
+  null,
+  "Crea $0"
+ ],
  "Create a new SSH key and authorize it": [
   null,
   "Crea una nuova chiave SSH e autorizzala"
@@ -382,13 +398,37 @@ window.cockpit_po = {
   null,
   "Palmare"
  ],
+ "Hide confirmation password": [
+  null,
+  "Nascondi la password di conferma"
+ ],
+ "Hide password": [
+  null,
+  "Nascondi la password"
+ ],
+ "Host is unknown": [
+  null,
+  "L'host è sconosciuto"
+ ],
  "Host key is incorrect": [
   null,
   "La chiave host non è corretta"
  ],
+ "Hostkey does not match": [
+  null,
+  "La chiave host non corrisponde"
+ ],
+ "Hostkey is unknown": [
+  null,
+  "La chiave host è sconosciuta"
+ ],
  "If the fingerprint matches, click \"Accept key and log in\". Otherwise, do not log in and contact your administrator.": [
   null,
   "Se l'impronta digitale coincide, clicca \"Accetta la chiave e autentica\". Altrimenti, non autenticare e contatta l'amministratore."
+ ],
+ "If the fingerprint matches, click 'Trust and add host'. Otherwise, do not connect and contact your administrator.": [
+  null,
+  "Se l'impronta digitale corrisponde, fai clic su \"Affida e aggiungi host\". Altrimenti non connetterti e contatta il tuo amministratore."
  ],
  "Install": [
   null,
@@ -400,7 +440,7 @@ window.cockpit_po = {
  ],
  "Install the cockpit-system package (and optionally other cockpit packages) on $0 to enable web console access.": [
   null,
-  ""
+  "Installa il pacchetto Cockpit-System (e facoltativamente altri pacchetti Cockpit) su $0 per abilitare l'accesso alla console web."
  ],
  "Installing $0": [
   null,
@@ -413,6 +453,10 @@ window.cockpit_po = {
  "Internal error: Invalid challenge header": [
   null,
   "Errore interno: challenge header non valido"
+ ],
+ "Internal protocol error": [
+  null,
+  "Errore di protocollo interno"
  ],
  "Invalid date format": [
   null,
@@ -612,7 +656,7 @@ window.cockpit_po = {
  ],
  "Packageless session unavailable": [
   null,
-  ""
+  "Sessione senza pacchetto non disponibile"
  ],
  "Password": [
   null,
@@ -698,6 +742,10 @@ window.cockpit_po = {
   null,
   "Host recenti"
  ],
+ "Refusing to connect": [
+  null,
+  "Rifiutarsi di connettersi"
+ ],
  "Removals:": [
   null,
   "Rimozioni:"
@@ -710,9 +758,17 @@ window.cockpit_po = {
   null,
   "Rimozione $0"
  ],
+ "Row expansion": [
+  null,
+  "Espansione delle righe"
+ ],
+ "Row select": [
+  null,
+  "Seleziona riga"
+ ],
  "Run this command over a trusted network or physically on the remote machine:": [
   null,
-  ""
+  "Esegui questo comando su una rete affidabile o fisicamente sul computer remoto:"
  ],
  "SELinux": [
   null,
@@ -722,6 +778,10 @@ window.cockpit_po = {
   null,
   "Chiave SSH"
  ],
+ "SSH key login": [
+  null,
+  "Accesso tramite chiave SSH"
+ ],
  "Sealed-case PC": [
   null,
   "PC sigillato"
@@ -730,9 +790,17 @@ window.cockpit_po = {
   null,
   "Configurazione e risoluzione dei problemi di Security Enhanced Linux"
  ],
+ "Select an option": [
+  null,
+  "Seleziona un'opzione"
+ ],
  "Server": [
   null,
   "Server"
+ ],
+ "Server closed connection": [
+  null,
+  "Connessione chiusa dal server"
  ],
  "Server has closed the connection.": [
   null,
@@ -750,9 +818,17 @@ window.cockpit_po = {
   null,
   "Shift+Insert"
  ],
+ "Show confirmation password": [
+  null,
+  "Mostra password di conferma"
+ ],
+ "Show password": [
+  null,
+  "Mostra password"
+ ],
  "Shut down": [
   null,
-  "Arresto"
+  "Arresta"
  ],
  "Single rank": [
   null,
@@ -773,6 +849,10 @@ window.cockpit_po = {
  "Storage": [
   null,
   "Archiviazione"
+ ],
+ "Strong password": [
+  null,
+  "Password complessa"
  ],
  "Sub-Chassis": [
   null,
@@ -877,10 +957,6 @@ window.cockpit_po = {
  "Tower": [
   null,
   "Tower"
- ],
- "Transient packageless sessions require the same operating system and version, for compatibility reasons: $0.": [
-  null,
-  ""
  ],
  "Try again": [
   null,

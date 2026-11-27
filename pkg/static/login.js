@@ -21,16 +21,16 @@ function debug(...args) {
     /* Dark mode */
     const theme = localStorage.getItem('shell:style') || 'auto';
     if ((window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches && theme === "auto") || theme === "dark") {
-        document.documentElement.classList.add('pf-v5-theme-dark');
+        document.documentElement.classList.add('pf-v6-theme-dark');
     } else {
-        document.documentElement.classList.remove('pf-v5-theme-dark');
+        document.documentElement.classList.remove('pf-v6-theme-dark');
     }
 
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
         if ((event.matches && theme === "auto") || theme === "dark") {
-            document.documentElement.classList.add('pf-v5-theme-dark');
+            document.documentElement.classList.add('pf-v6-theme-dark');
         } else {
-            document.documentElement.classList.remove('pf-v5-theme-dark');
+            document.documentElement.classList.remove('pf-v6-theme-dark');
         }
     });
 
@@ -69,7 +69,10 @@ function debug(...args) {
 
     const _ = gettext;
 
-    let login_path, application, org_login_path, org_application;
+    let login_path;
+    let application;
+    let org_login_path;
+    let org_application;
     const qs_re = /[?&]?([^=]+)=([^&]*)/g;
     let oauth_redirect_to = null;
 
@@ -188,7 +191,7 @@ function debug(...args) {
             const len = content.length;
             if ((content[0] === '"' || content[0] === '\'') &&
                 len > 2 && content[len - 1] === content[0])
-                content = content.substr(1, len - 2);
+                content = content.substring(1, len - 1);
             elt.innerHTML = content || def;
         } else {
             elt.removeAttribute("class");
@@ -211,7 +214,7 @@ function debug(...args) {
                 // Render a "helper text" warning above the log in button
                 document.querySelector("#login .login-actions").insertAdjacentHTML(
                     "beforebegin",
-                    "<div class='pf-v5-c-helper-text pf-m-warning' id='bypass-warning'>" +
+                    "<div class='pf-v6-c-helper-text pf-m-warning' id='bypass-warning'>" +
                     _("Cockpit might not render correctly in your browser") +
                     "</div>"
                 );
@@ -553,7 +556,7 @@ function debug(...args) {
                 show_form(form || "login");
                 id("login-error-title").textContent = title;
                 id("login-error-message").textContent = msg;
-                hideToggle("#error-group .pf-v5-c-alert__description", !msg);
+                hideToggle("#error-group .pf-v6-c-alert__description", !msg);
                 show("#error-group");
             }
         }
@@ -574,7 +577,7 @@ function debug(...args) {
             clear_errors();
             id("login-error-title").textContent = title;
             id("login-error-message").textContent = msg;
-            hideToggle("#error-group .pf-v5-c-alert__description", !msg);
+            hideToggle("#error-group .pf-v6-c-alert__description", !msg);
             show("#error-group");
             toggle_options(null, true);
             show_form("login");
@@ -694,7 +697,7 @@ function debug(...args) {
 
             const b1 = document.createElement("button");
             b1.textContent = host;
-            b1.classList.add("pf-v5-c-button", "pf-m-tertiary", "host-name");
+            b1.classList.add("pf-v6-c-button", "pf-m-tertiary", "host-name");
             b1.addEventListener("click", () => {
                 id("server-field").value = host;
                 call_login();
@@ -1042,16 +1045,9 @@ function debug(...args) {
                 const status = decodeURIComponent(xhr.statusText).trim();
                 login_failure(_("Permission denied"), status === "Permission denied" ? "" : status);
             } else if (xhr.status == 500 && xhr.statusText.indexOf("no-cockpit") > -1) {
-                let message = format(
+                const message = format(
                     _("Install the cockpit-system package (and optionally other cockpit packages) on $0 to enable web console access."),
                     login_machine || "localhost");
-
-                // with os-release (all but really weird targets) we get some more info
-                const error = JSON.parse(xhr.responseText);
-                if (error.supported)
-                    message = format(
-                        _("Transient packageless sessions require the same operating system and version, for compatibility reasons: $0."),
-                        error.supported) + " " + message;
 
                 login_failure(_("Packageless session unavailable"), message);
             } else if (xhr.statusText) {
@@ -1130,7 +1126,7 @@ function debug(...args) {
             if (login_data_host) {
                 const hostkey = response["login-data"]["known-hosts"];
                 if (hostkey) {
-                    console.debug("setup_localstorage(): updating known_hosts database for deferred host key for", login_data_host, ":", hostkey);
+                    debug("setup_localstorage(): updating known_hosts database for deferred host key for", login_data_host, ":", hostkey);
                     set_hostkeys(login_data_host, hostkey);
                 } else {
                     console.error("login.js internal error: setup_localstorage() received a pending login-data host, but login-data does not contain known-hosts");

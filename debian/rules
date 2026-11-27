@@ -37,7 +37,17 @@ override_dh_auto_configure:
 override_dh_auto_install:
 	DEB_PYTHON_INSTALL_LAYOUT=deb dh_auto_install
 
-# avoid trying to start cockpit-motd.service and cockpit-wsinstance-*.socket etc.
+LOGS_JS_GZ = debian/tmp/usr/share/cockpit/systemd/logs.js.gz
+
+# this branch does not rebuild dist/ during package build, so apply the
+# minified equivalent of pkg-systemd-robustify-argument-quoting.patch to the
+# pre-built bundle; the zgrep ensures that the replacement applied (CVE-2026-4802)
+execute_after_dh_auto_install:
+	zcat $(LOGS_JS_GZ) | sed 's|a=a\.map(l=>l\.replaceAll(" ","\\\\ "))\.join(" ")|a=a.map(l=>"'\''"+l.replaceAll("'\''","'\''\\"'\''\\"'\''")+"'\''").join(" ")|' | gzip -9n > $(LOGS_JS_GZ).new
+	mv $(LOGS_JS_GZ).new $(LOGS_JS_GZ)
+	zgrep -qF 'a=a.map(l=>"'\''"+l.replaceAll("'\''","'\''\"'\''\"'\''")+"'\''").join(" ")' $(LOGS_JS_GZ)
+
+# avoid trying to start cockpit-issue.service and cockpit-wsinstance-*.socket etc.
 override_dh_installsystemd:
 	dh_installsystemd -p cockpit-ws cockpit.socket
 
@@ -72,14 +82,11 @@ ifeq ($(PRE4AA),)
 	install -p -m 644 tools/apparmor.d/cockpit-desktop debian/cockpit-ws/etc/apparmor.d/
 endif
 
-	make install-tests DESTDIR=debian/cockpit-tests
-
 execute_after_dh_install-indep:
 	# avoid dh_missing failure
 	rm -r debian/tmp/usr/lib/python*
 
-# run pytests *after* installation, so that we can make sure that we installed the right files
-execute_after_dh_install-arch:
+	# run pytests *after* installation, so that we can make sure that we installed the right files
 ifeq (, $(findstring nocheck, $(DEB_BUILD_OPTIONS)))
 ifeq ($(shell . /etc/os-release; echo $${VERSION_ID:-unstable}),22.04)
 	NO_QUNIT=1 PYTHONPATH=$$(ls -d debian/cockpit-bridge/usr/lib/python3*/dist-packages) python3 -m pytest -vv -k 'not linter and not test_descriptions'
@@ -87,7 +94,3 @@ else
 	NO_QUNIT=1 pytest -vv -k 'not linter and not test_descriptions' -opythonpath=$$(ls -d debian/cockpit-bridge/usr/lib/python3*/dist-packages)
 endif
 endif
-
-# dh compat 14 does that automatically, remove when upgrading
-execute_before_dh_installtmpfiles:
-	dh_installsysusers

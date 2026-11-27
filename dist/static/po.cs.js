@@ -64,7 +64,7 @@ window.cockpit_po = {
  ],
  "$0 will be installed.": [
   null,
-  "$0 bude nainstalováno."
+  "Bude nainstalováno $0."
  ],
  "$0 year": [
   null,
@@ -178,15 +178,15 @@ window.cockpit_po = {
  ],
  "Automatically using NTP": [
   null,
-  "Automatické použití NTP"
+  "Automaticky pomocí NTP"
  ],
  "Automatically using additional NTP servers": [
   null,
-  "Automatické použití dalších NTP serverů"
+  "Automaticky pomocí dalších NTP serverů"
  ],
  "Automatically using specific NTP servers": [
   null,
-  "Automatické použití uvedených NTP serverů"
+  "Automaticky pomocí konkrétních NTP serverů"
  ],
  "Automation script": [
   null,
@@ -235,6 +235,10 @@ window.cockpit_po = {
  "Checking installed software": [
   null,
   "Zjišťuje se nainstalovaný sofware"
+ ],
+ "Clear input value": [
+  null,
+  "Vymazat vstupní hodnotu"
  ],
  "Close": [
   null,
@@ -323,6 +327,10 @@ window.cockpit_po = {
  "Copy to clipboard": [
   null,
   "Zkopírovat do schránky"
+ ],
+ "Create $0": [
+  null,
+  "Vytvořit $0"
  ],
  "Create a new SSH key and authorize it": [
   null,
@@ -788,6 +796,10 @@ window.cockpit_po = {
   null,
   "Nastavení SELinux a řešení problémů"
  ],
+ "Select an option": [
+  null,
+  "Vyberte možnost"
+ ],
  "Server": [
   null,
   "Server"
@@ -979,10 +991,6 @@ window.cockpit_po = {
  "Tower": [
   null,
   "Věž"
- ],
- "Transient packageless sessions require the same operating system and version, for compatibility reasons: $0.": [
-  null,
-  "Přechodná bezbalíčkové relace vyžadují stejný operační systém a jeho verzi (z důvodů kompatibility): $0."
  ],
  "Trust and add host": [
   null,

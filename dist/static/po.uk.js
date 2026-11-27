@@ -236,6 +236,10 @@ window.cockpit_po = {
   null,
   "Перевіряємо встановлене програмне забезпечення"
  ],
+ "Clear input value": [
+  null,
+  "Вилучити вхідне значення"
+ ],
  "Close": [
   null,
   "Закрити"
@@ -792,6 +796,10 @@ window.cockpit_po = {
   null,
   "Налаштування Security Enhanced Linux та усування вад"
  ],
+ "Select an option": [
+  null,
+  "Виберіть варіант"
+ ],
  "Server": [
   null,
   "Сервер"
@@ -983,10 +991,6 @@ window.cockpit_po = {
  "Tower": [
   null,
   "Башточка"
- ],
- "Transient packageless sessions require the same operating system and version, for compatibility reasons: $0.": [
-  null,
-  "Проміжні сеанси без пакунків потребують однакової операційної системи та версії з міркувань сумісності: $0."
  ],
  "Trust and add host": [
   null,

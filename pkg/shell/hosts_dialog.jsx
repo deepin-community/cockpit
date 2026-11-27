@@ -19,7 +19,9 @@
 
 import cockpit from "cockpit";
 
-import { get_init_superuser_for_options } from "./machines/machines";
+import {
+    get_init_superuser_for_options, split_connection_string, generate_connection_string
+} from "./machines/machines";
 import * as credentials from "credentials";
 import ssh_show_default_key_sh from "../lib/ssh-show-default-key.sh";
 import ssh_add_key_sh from "../lib/ssh-add-key.sh";
@@ -33,17 +35,20 @@ import { Checkbox } from "@patternfly/react-core/dist/esm/components/Checkbox/in
 import { ClipboardCopy } from "@patternfly/react-core/dist/esm/components/ClipboardCopy/index.js";
 import { ExpandableSection } from "@patternfly/react-core/dist/esm/components/ExpandableSection/index.js";
 import { Form, FormGroup } from "@patternfly/react-core/dist/esm/components/Form/index.js";
-import { Modal } from "@patternfly/react-core/dist/esm/components/Modal/index.js";
+import {
+    Modal
+} from '@patternfly/react-core/dist/esm/deprecated/components/Modal/index.js';
 import { Popover } from "@patternfly/react-core/dist/esm/components/Popover/index.js";
 import { Radio } from "@patternfly/react-core/dist/esm/components/Radio/index.js";
 import { Stack } from "@patternfly/react-core/dist/esm/layouts/Stack/index.js";
 import { TextInput } from "@patternfly/react-core/dist/esm/components/TextInput/index.js";
-import { OutlinedQuestionCircleIcon } from "@patternfly/react-icons";
+import { OutlinedQuestionCircleIcon, ExternalLinkAltIcon } from "@patternfly/react-icons";
+import { HelperText, HelperTextItem } from "@patternfly/react-core/dist/esm/components/HelperText/index.js";
+import { Content, ContentVariants } from "@patternfly/react-core/dist/esm/components/Content";
 
 import { FormHelper } from "cockpit-components-form-helper";
 import { ModalError } from "cockpit-components-inline-notification.jsx";
-
-import { build_href, split_connection_string, generate_connection_string } from "./util.jsx";
+import { fmt_to_fragments } from "utils.js";
 
 const _ = cockpit.gettext;
 
@@ -71,24 +76,35 @@ export const HostModalState = () => {
         close_modal,
     };
 
-    cockpit.event_target(self);
-    return self;
+    return cockpit.event_target(self);
 };
 
-export async function add_host(state) {
-    await state.show_modal({ });
+/* Activate and jump to a newly added machine, identified by its
+   connection string.
+ */
+function jump_to_new_connection_string(shell_state, connection_string) {
+    // Get the address of the machine from its connection string
+    const addr = split_connection_string(connection_string).address;
+    // Tell the Loader that now is the time to start monitoring the
+    // manifests.
+    shell_state.loader.connect(addr);
+    // Navigate to it.
+    shell_state.jump({ host: addr });
+}
+
+export async function add_host(state, shell_state) {
+    const connection_string = await state.show_modal({ });
+    if (connection_string)
+        jump_to_new_connection_string(shell_state, connection_string);
 }
 
 export async function edit_host(state, shell_state, machine) {
     const { current_machine } = shell_state;
     const connection_string = await state.show_modal({ address: machine.address });
     if (connection_string) {
-        const parts = split_connection_string(connection_string);
-        const addr = build_href({ host: parts.address });
-        if (machine == current_machine && parts.address != machine.address) {
-            shell_state.loader.connect(parts.address);
-            shell_state.jump(addr);
-        }
+        const addr = split_connection_string(connection_string).address;
+        if (machine == current_machine && addr != machine.address)
+            jump_to_new_connection_string(shell_state, connection_string);
     }
 }
 
@@ -119,6 +135,12 @@ export async function connect_host(state, shell_state, machine) {
             address: machine.address,
             template: codes[machine.problem],
         });
+    } else if (!window.sessionStorage.getItem("connection-warning-shown")) {
+        // connect by launching into the "Connection warning" dialog.
+        connection_string = await state.show_modal({
+            address: machine.address,
+            template: "connect"
+        });
     } else {
         // Try to connect without any dialog
         try {
@@ -145,6 +167,7 @@ export async function connect_host(state, shell_state, machine) {
 }
 
 export const codes = {
+    danger: "connect",
     "no-cockpit": "not-supported",
     "not-supported": "not-supported",
     "protocol-error": "not-supported",
@@ -186,7 +209,7 @@ class NotSupported extends React.Component {
                    onClose={this.props.onClose}
                    title={_("Cockpit is not installed")}
                    footer={
-                       <Button variant="link" className="btn-cancel" onClick={this.props.onClose}>
+                       <Button variant="secondary" className="btn-cancel" onClick={this.props.onClose}>
                            { _("Close") }
                        </Button>
                    }
@@ -195,6 +218,72 @@ class NotSupported extends React.Component {
                     { this.props.dialogError && <ModalError dialogError={this.props.dialogError} />}
                     <p>{cockpit.format(_("A compatible version of Cockpit is not installed on $0."), this.props.full_address)}</p>
                 </Stack>
+            </Modal>
+        );
+    }
+}
+
+class Connect extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            inProgress: false,
+        };
+    }
+
+    onConnect() {
+        window.sessionStorage.setItem("connection-warning-shown", true);
+        this.setState({ inProgress: true });
+        this.props.run(try2Connect(this.props.machines_ins, this.props.full_address), ex => {
+            let keep_message = false;
+            if (ex.problem === "no-host") {
+                let host_id_port = this.props.full_address;
+                let port = "22";
+                const port_index = host_id_port.lastIndexOf(":");
+                if (port_index === -1) {
+                    host_id_port = this.props.full_address + ":22";
+                } else {
+                    port = host_id_port.substring(port_index + 1);
+                }
+
+                ex.message = cockpit.format(_("Unable to contact the given host $0. Make sure it has ssh running on port $1, or specify another port in the address."), host_id_port, port);
+                ex.problem = "not-found";
+                keep_message = true;
+            }
+            this.setState({ inProgress: false });
+            this.props.setError(ex, keep_message);
+        });
+    }
+
+    render() {
+        return (
+            <Modal id="hosts_connect_server_dialog" isOpen
+                   position="top" variant="small"
+                   onClose={this.props.onClose}
+                   title={fmt_to_fragments(_("Connect to $0?"), <b>{this.props.host}</b>)}
+                   titleIconVariant="warning"
+                   footer={<>
+                       <HelperText>
+                           <HelperTextItem>{_("You will be reminded once per session.")}</HelperTextItem>
+                       </HelperText>
+                       <Button variant="warning" isLoading={this.state.inProgress}
+                                       onClick={() => this.onConnect()}>
+                           {_("Connect")}
+                       </Button>
+                       <Button variant="link" className="btn-cancel" onClick={this.props.onClose}>
+                           { _("Cancel") }
+                       </Button>
+                   </>}
+            >
+                <Content component={ContentVariants.p}>
+                    {_("Connected hosts can fully control each other. This includes running programs that could harm your system or steal data. Only connect to trusted machines.")}
+                </Content>
+                <Content component={ContentVariants.p}>
+                    <a href="https://cockpit-project.org/guide/latest/multi-host.html" target="blank" rel="noopener noreferrer">
+                        <ExternalLinkAltIcon /> {_("Read more")}
+                    </a>
+                </Content>
             </Modal>
         );
     }
@@ -323,23 +412,27 @@ class AddMachine extends React.Component {
             });
         });
 
-        this.props.run(try2Connect(this.props.machines_ins, address), ex => {
-            if (ex.problem === "no-host") {
-                let host_id_port = address;
-                let port = "22";
-                const port_index = host_id_port.lastIndexOf(":");
-                if (port_index === -1) {
-                    host_id_port = address + ":22";
-                } else {
-                    port = host_id_port.substr(port_index + 1);
-                }
+        if (!window.sessionStorage.getItem("connection-warning-shown")) {
+            this.props.setError({ problem: "danger", command: "close" });
+        } else {
+            this.props.run(try2Connect(this.props.machines_ins, address), ex => {
+                if (ex.problem === "no-host") {
+                    let host_id_port = address;
+                    let port = "22";
+                    const port_index = host_id_port.lastIndexOf(":");
+                    if (port_index === -1) {
+                        host_id_port = address + ":22";
+                    } else {
+                        port = host_id_port.substring(port_index + 1);
+                    }
 
-                ex.message = cockpit.format(_("Unable to contact the given host $0. Make sure it has ssh running on port $1, or specify another port in the address."), host_id_port, port);
-                ex.problem = "not-found";
-            }
-            this.setState({ inProgress: false });
-            this.props.setError(ex);
-        });
+                    ex.message = cockpit.format(_("Unable to contact the given host $0. Make sure it has ssh running on port $1, or specify another port in the address."), host_id_port, port);
+                    ex.problem = "not-found";
+                }
+                this.setState({ inProgress: false });
+                this.props.setError(ex);
+            });
+        }
     }
 
     render() {
@@ -573,10 +666,10 @@ class HostKey extends React.Component {
             body = <>
                 <Alert variant='danger' isInline title={_("Changed keys are often the result of an operating system reinstallation. However, an unexpected change may indicate a third-party attempt to intercept your connection.")} />
                 <p>{_("To ensure that your connection is not intercepted by a malicious third-party, please verify the host key fingerprint:")}</p>
-                <ClipboardCopy isReadOnly hoverTip={_("Copy")} clickTip={_("Copied")} className="hostkey-fingerprint pf-v5-u-font-family-monospace">{fp}</ClipboardCopy>
+                <ClipboardCopy isReadOnly hoverTip={_("Copy")} clickTip={_("Copied")} className="hostkey-fingerprint pf-v6-u-font-family-monospace">{fp}</ClipboardCopy>
                 <p className="hostkey-type">({key_type})</p>
                 <p>{cockpit.format(_("To verify a fingerprint, run the following on $0 while physically sitting at the machine or through a trusted network:"), this.props.host)}</p>
-                <ClipboardCopy isReadOnly hoverTip={_("Copy")} clickTip={_("Copied")} className="hostkey-verify-help-cmds pf-v5-u-font-family-monospace">{scan_cmd}</ClipboardCopy>
+                <ClipboardCopy isReadOnly hoverTip={_("Copy")} clickTip={_("Copied")} className="hostkey-verify-help-cmds pf-v6-u-font-family-monospace">{scan_cmd}</ClipboardCopy>
                 <p>{_("The resulting fingerprint is fine to share via public methods, including email.")}</p>
                 <p>{_("If the fingerprint matches, click 'Trust and add host'. Otherwise, do not connect and contact your administrator.")}</p>
             </>;
@@ -591,9 +684,9 @@ class HostKey extends React.Component {
                                    isExpanded={this.state.verifyExpanded}
                                    onToggle={(_ev, verifyExpanded) => this.setState({ verifyExpanded }) }>
                     <div>{_("Run this command over a trusted network or physically on the remote machine:")}</div>
-                    <ClipboardCopy isReadOnly hoverTip={_("Copy")} clickTip={_("Copied")} className="hostkey-verify-help hostkey-verify-help-cmds pf-v5-u-font-family-monospace">{scan_cmd}</ClipboardCopy>
+                    <ClipboardCopy isReadOnly hoverTip={_("Copy")} clickTip={_("Copied")} className="hostkey-verify-help hostkey-verify-help-cmds pf-v6-u-font-family-monospace">{scan_cmd}</ClipboardCopy>
                     <div>{_("The fingerprint should match:")} {fingerprint_help}</div>
-                    <ClipboardCopy isReadOnly hoverTip={_("Copy")} clickTip={_("Copied")} className="hostkey-verify-help hostkey-fingerprint pf-v5-u-font-family-monospace">{fp}</ClipboardCopy>
+                    <ClipboardCopy isReadOnly hoverTip={_("Copy")} clickTip={_("Copied")} className="hostkey-verify-help hostkey-fingerprint pf-v6-u-font-family-monospace">{fp}</ClipboardCopy>
                 </ExpandableSection>
                 <Alert variant='warning' isInline isPlain title={_("Malicious pages on a remote machine may affect other connected hosts")} />
             </>;
@@ -1157,7 +1250,9 @@ class HostModalInner extends React.Component {
             complete: this.complete,
         };
 
-        if (template === "add-machine")
+        if (template === "connect")
+            return <Connect {...props} />;
+        else if (template === "add-machine")
             return <AddMachine {...props} />;
         else if (template === "unknown-hostkey" || template === "unknown-host" || template === "invalid-hostkey")
             return <HostKey {...props} />;

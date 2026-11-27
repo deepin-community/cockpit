@@ -17,7 +17,7 @@
  * along with Cockpit; If not, see <https://www.gnu.org/licenses/>.
  */
 
-import '../lib/patternfly/patternfly-5-cockpit.scss';
+import '../lib/patternfly/patternfly-6-cockpit.scss';
 import cockpit from "cockpit";
 
 import React, { useEffect, useState } from "react";
@@ -29,13 +29,15 @@ import { HelperText, HelperTextItem } from "@patternfly/react-core/dist/esm/comp
 import { Flex, FlexItem } from "@patternfly/react-core/dist/esm/layouts/Flex/index.js";
 import { Form, FormGroup, FormSection } from "@patternfly/react-core/dist/esm/components/Form/index.js";
 import { FormSelect, FormSelectOption } from "@patternfly/react-core/dist/esm/components/FormSelect/index.js";
-import { Page, PageSection, PageSectionVariants } from "@patternfly/react-core/dist/esm/components/Page/index.js";
+import { Page, PageSection } from "@patternfly/react-core/dist/esm/components/Page/index.js";
 import { CodeBlockCode } from "@patternfly/react-core/dist/esm/components/CodeBlock/index.js";
 import { DescriptionList, DescriptionListDescription, DescriptionListGroup, DescriptionListTerm } from "@patternfly/react-core/dist/esm/components/DescriptionList/index.js";
-import { Modal } from "@patternfly/react-core/dist/esm/components/Modal/index.js";
+import {
+    Modal
+} from '@patternfly/react-core/dist/esm/deprecated/components/Modal/index.js';
 import { Spinner } from "@patternfly/react-core/dist/esm/components/Spinner/index.js";
 import { Switch } from "@patternfly/react-core/dist/esm/components/Switch/index.js";
-import { Text, TextContent, TextVariants } from "@patternfly/react-core/dist/esm/components/Text/index.js";
+import { Content, ContentVariants } from "@patternfly/react-core/dist/esm/components/Content/index.js";
 import { TextInput } from "@patternfly/react-core/dist/esm/components/TextInput/index.js";
 import { Title } from "@patternfly/react-core/dist/esm/components/Title/index.js";
 import { Tooltip } from "@patternfly/react-core/dist/esm/components/Tooltip/index.js";
@@ -355,28 +357,28 @@ export class KdumpPage extends React.Component {
             if (target.type === "local") {
                 verifyMessage = fmt_to_fragments(
                     ' ' + _("Results of the crash will be stored in $0 as $1, if kdump is properly configured."),
-                    <span className="pf-v5-u-font-family-monospace-vf">{path}</span>,
-                    <span className="pf-v5-u-font-family-monospace-vf">vmcore</span>);
+                    <span className="pf-v6-u-font-family-monospace-vf">{path}</span>,
+                    <span className="pf-v6-u-font-family-monospace-vf">vmcore</span>);
             } else if (target.type === "ssh" || target.type == "nfs") {
                 verifyMessage = fmt_to_fragments(
                     ' ' + _("Results of the crash will be copied through $0 to $1 as $2, if kdump is properly configured."),
-                    <span className="pf-v5-u-font-family-monospace-vf">{target.type === "ssh" ? "SSH" : "NFS"}</span>,
-                    <span className="pf-v5-u-font-family-monospace-vf">{path}</span>,
-                    <span className="pf-v5-u-font-family-monospace-vf">vmcore</span>);
+                    <span className="pf-v6-u-font-family-monospace-vf">{target.type === "ssh" ? "SSH" : "NFS"}</span>,
+                    <span className="pf-v6-u-font-family-monospace-vf">{path}</span>,
+                    <span className="pf-v6-u-font-family-monospace-vf">vmcore</span>);
             }
         }
 
         // open a dialog to confirm crashing the kernel to test the settings - then do it
         const dialogProps = {
             title: _("Test kdump settings"),
-            body: (<TextContent>
-                <Text component={TextVariants.p}>
+            body: (<Content>
+                <Content component={ContentVariants.p}>
                     {_("Test kdump settings by crashing the kernel. This may take a while and the system might not automatically reboot. Do not purposefully crash the system while any important task is running.")}
-                </Text>
-                {verifyMessage && <Text component={TextVariants.p}>
+                </Content>
+                {verifyMessage && <Content component={ContentVariants.p}>
                     {verifyMessage}
-                </Text>}
-            </TextContent>),
+                </Content>}
+            </Content>),
             showClose: true,
             titleIconVariant: "warning",
         };
@@ -414,19 +416,31 @@ export class KdumpPage extends React.Component {
 # A reboot will be required if crashkernel was not set before
 kdumpctl reset-crashkernel`;
         }
-        const shell = `
+        let shell;
+        if (this.state.os_release.NAME?.includes('MicroOS')) {
+            enableCrashKernel = `
+# A reboot will be required if crashkernel was not set before
+transactional-update setup-kdump`;
+            shell = `
+cat > /etc/kdump.conf << EOF
+ ${kdumpconf}
+EOF
+${enableCrashKernel}
+        `;
+        } else {
+            shell = `
 cat > /etc/kdump.conf << EOF
 ${kdumpconf}
 EOF
 systemctl enable --now kdump.service
 ${enableCrashKernel}
 `;
+        }
 
         Dialogs.show(
             <ModificationsExportDialog
-              ansible={exportAnsibleTask(this.props.kdumpStatus.config, this.state.os_release)}
+              ansible={ this.state.os_release.NAME?.includes('MicroOS') ? null : exportAnsibleTask(this.props.kdumpStatus.config, this.state.os_release)}
               shell={shell}
-              show
               onClose={Dialogs.close}
             />);
     }
@@ -537,8 +551,8 @@ ${enableCrashKernel}
             kdumpSwitch = (<Switch isChecked={!!serviceRunning}
                 onChange={this.props.onSetServiceState}
                 aria-label={_("kdump status")}
+                label={serviceRunning ? _("Enabled") : _("Disabled")}
                 isDisabled={this.props.stateChanging} />);
-            kdumpSwitchHelper = serviceRunning ? _("Enabled") : _("Disabled");
         }
 
         let alertMessage;
@@ -548,20 +562,20 @@ ${enableCrashKernel}
                 if (this.props.reservedMemory == 0) {
                     alertMessage = fmt_to_fragments(
                         _("Kernel did not boot with the $0 setting"),
-                        <span className="pf-v5-u-font-family-monospace-vf">crashkernel</span>
+                        <span className="pf-v6-u-font-family-monospace-vf">crashkernel</span>
                     );
                     alertDetail = fmt_to_fragments(
                         _("Reserve memory at boot time by setting a '$0' option on the kernel command line. For example, append '$1' to $2  in $3 or use your distribution's kernel argument editor."),
-                        <span className="pf-v5-u-font-family-monospace-vf">crashkernel</span>,
-                        <span className="pf-v5-u-font-family-monospace-vf">crashkernel=512M</span>,
-                        <span className="pf-v5-u-font-family-monospace-vf">GRUB_CMDLINE_LINUX</span>,
-                        <span className="pf-v5-u-font-family-monospace-vf">/etc/default/grub</span>
+                        <span className="pf-v6-u-font-family-monospace-vf">crashkernel</span>,
+                        <span className="pf-v6-u-font-family-monospace-vf">crashkernel=512M</span>,
+                        <span className="pf-v6-u-font-family-monospace-vf">GRUB_CMDLINE_LINUX</span>,
+                        <span className="pf-v6-u-font-family-monospace-vf">/etc/default/grub</span>
                     );
                 } else if (this.props.kdumpStatus.state == "failed") {
                     alertMessage = (
                         <>
                             {_("Service has an error")}
-                            <Button variant="link" isInline className="pf-v5-u-ml-sm" onClick={this.handleServiceDetailsClick}>{_("more details")}</Button>
+                            <Button variant="link" isInline className="pf-v6-u-ml-sm" onClick={this.handleServiceDetailsClick}>{_("more details")}</Button>
                         </>
                     );
                 }
@@ -569,36 +583,37 @@ ${enableCrashKernel}
                 alertMessage = _("Kdump service is not installed.");
                 alertDetail = fmt_to_fragments(
                     _("Install the $0 package."),
-                    <span className="pf-v5-u-font-family-monospace-vf">kexec-tools</span>
+                    <span className="pf-v6-u-font-family-monospace-vf">kexec-tools</span>
                 );
             }
         }
         return (
-            <Page>
-                <PageSection variant={PageSectionVariants.light}>
+            <Page className='no-masthead-sidebar'>
+                <PageSection hasBodyWrapper={false}>
                     <Flex spaceItems={{ default: 'spaceItemsMd' }} alignItems={{ default: 'alignItemsCenter' }}>
                         <Title headingLevel="h2" size="3xl">
                             {_("Kernel crash dump")}
                         </Title>
                         {kdumpSwitch}
-                        <HelperText>
-                            <HelperTextItem variant="indeterminate">{kdumpSwitchHelper}</HelperTextItem>
-                        </HelperText>
+                        {kdumpSwitchHelper &&
+                            <HelperText className="subtle-helper-text">
+                                <HelperTextItem>{kdumpSwitchHelper}</HelperTextItem>
+                            </HelperText>}
                         {automationButton}
                     </Flex>
                 </PageSection>
-                <PageSection>
+                <PageSection hasBodyWrapper={false}>
 
                     {alertMessage &&
                         <Alert variant='danger'
-                            className="pf-v5-u-mb-md"
+                            className="pf-v6-u-mb-md"
                             isLiveRegion={this.props.isLiveRegion}
                             isInline
                             title={alertMessage}>
                             {alertDetail}
                         </Alert>
                     }
-                    <Card>
+                    <Card isPlain>
                         <CardTitle>
                             <Title headingLevel="h4" size="xl">
                                 {_("Kdump settings")}

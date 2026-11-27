@@ -180,8 +180,8 @@ account    required     pam_succeed_if.so user ingroup %s""" % m.get_admin_group
 
         # And now we remove ssh which affects the default
         if not m.ws_container:
-            self.restore_file("/usr/bin/ssh")
-            m.execute("rm /usr/bin/ssh")
+            m.execute("mount -o bind /dev/null /usr/bin/ssh")
+            self.addCleanup(m.execute, "umount /usr/bin/ssh")
             m.restart_cockpit()
             b.open("/system")
             b.wait_visible("#login")
@@ -220,7 +220,9 @@ account    required     pam_succeed_if.so user ingroup %s""" % m.get_admin_group
         def assert_messages(has_last, n_fail):
             if has_last:
                 b.wait_in_text('#system_last_login', "Last successful login")
-                b.wait_in_text('#system_last_login_from', "from")  # only present if IP was logged
+                b.wait_in_text('#system_last_login_from',
+                               # this is the correct IP for our CI, and we don't run this on tmt
+                               "from ::ffff:172.27.0.2 on web console")  # only present if IP was logged
 
             if n_fail:
                 b.wait_in_text('#system_last_login', f'{n_fail} failed login')
@@ -243,7 +245,7 @@ account    required     pam_succeed_if.so user ingroup %s""" % m.get_admin_group
         m.start_cockpit()
 
         # Clean out the relevant logfiles
-        m.execute("truncate -s0 /var/log/{[bw]tmp,lastlog} /var/run/utmp")
+        m.execute("truncate -s0 /var/log/{[bw]tmp,lastlog} /run/utmp")
 
         if m.image == "arch":
             self.sed_file("s/# deny = 3/deny = 4/", "/etc/security/faillock.conf")
@@ -369,7 +371,7 @@ account    required     pam_succeed_if.so user ingroup %s""" % m.get_admin_group
                                     '.*Sorry, passwords do not match.')
         self.allow_restart_journal_messages()
 
-    @testlib.skipWsContainer("mock-pam-conv from cockpit-tests not installed")
+    @testlib.skipWsContainer("mock-pam-conv not installed")
     def testConversation(self):
         m = self.machine
         b = self.browser
@@ -430,7 +432,7 @@ account    required     pam_succeed_if.so user ingroup %s""" % m.get_admin_group
         # this doesn't actually record anything, but logging into cockpit should work
         m.start_cockpit()
         b.login_and_go("/system", user="user", password="abcdefg")
-        b.wait_visible(".pf-v5-c-alert:contains('Web console is running in limited access mode.')")
+        b.wait_visible(".pf-v6-c-alert:contains('Web console is running in limited access mode.')")
         b.logout()
 
         self.allow_journal_messages(".*value for the SHELL variable was not found the /etc/shells.*",
@@ -489,7 +491,7 @@ account    required     pam_succeed_if.so user ingroup %s""" % m.get_admin_group
         b.logout()
         b.login_and_go("/system", user="unpriv")
         # not an admin
-        b.wait_visible(".pf-v5-c-alert:contains('Web console is running in limited access mode.')")
+        b.wait_visible(".pf-v6-c-alert:contains('Web console is running in limited access mode.')")
 
         # ws container does not keep login history
         if not m.ws_container:
@@ -559,7 +561,7 @@ account    required     pam_succeed_if.so user ingroup %s""" % m.get_admin_group
         b.wait_in_text(f"#shutdown-dialog button{self.danger_btn_class}", 'Reboot')
         b.click("#delay")
         b.click("button:contains('5 minutes')")
-        b.wait_text("#delay .pf-v5-c-select__toggle-text", "5 minutes")
+        b.wait_text("#delay .pf-v6-c-menu-toggle__text", "5 minutes")
         b.click(f"#shutdown-dialog button{self.danger_btn_class}")
 
         # cancel reboot
@@ -591,7 +593,7 @@ account    required     pam_succeed_if.so user ingroup %s""" % m.get_admin_group
         b.open("/system")
         b.wait_visible("#unsupported-browser")
         b.wait_in_text("#bypass-browser-check", "Bypass browser check")
-        b.click(".pf-v5-c-expandable-section")
+        b.click(".pf-v6-c-expandable-section")
 
         b.set_val('#login-user-input', "admin")
         b.set_val('#login-password-input', "foobar")
@@ -646,6 +648,34 @@ account    required     pam_succeed_if.so user ingroup %s""" % m.get_admin_group
     def testFailingWebsocketSafariNoCA(self):
         self.testFailingWebsocket(safari=True, cacert=False)
 
+    def enable_faillock(self, count: int):
+        m = self.machine
+        # ensure we have no faillock in our pam config already
+        # arch has faillock enabled by default
+        if m.image != "arch":
+            m.execute("! grep -r faillock /etc/pam.d")
+
+        # add it to the pam config
+        if m.image.startswith('debian-') or m.image.startswith('ubuntu'):
+            # enable pam_faillock.  see example in pam_faillock(8)
+            self.sed_file(r"/fallback if no module succeeds/ s/^/"
+                          f"auth [default=die] pam_faillock.so authfail deny={count}\\n"
+                          f"auth sufficient pam_faillock.so authsucc deny={count}\\n/",
+                          "/etc/pam.d/common-auth")
+        elif m.image == "arch":
+            self.sed_file(f"s/# deny = 3/deny = {count}/", "/etc/security/faillock.conf")
+        else:
+            # see https://access.redhat.com/solutions/62949
+            sed = ("/^auth.*pam_unix/ {"
+                   "s/sufficient/[success=1 default=ignore]/\n"
+                   f"aauth [default=die] pam_faillock.so authfail audit deny={count} unlock_time=600\n"
+                   f"aauth sufficient pam_faillock.so authsucc audit deny={count} unlock_time=600\n"
+                   "}")
+            self.sed_file(sed, "/etc/pam.d/password-auth")
+            self.sed_file(sed, "/etc/pam.d/system-auth")
+
+        m.execute("grep -r faillock /etc/pam.d")
+
     def testFaillock(self):
         m = self.machine
         b = self.browser
@@ -653,7 +683,7 @@ account    required     pam_succeed_if.so user ingroup %s""" % m.get_admin_group
         module = 'faillock'
 
         def logfile(user):
-            return '/var/run/faillock/' + user
+            return '/run/faillock/' + user
 
         def expect_fail_count(expected, user="admin", must_exist=True):
             if must_exist:
@@ -685,30 +715,7 @@ account    required     pam_succeed_if.so user ingroup %s""" % m.get_admin_group
             b.logout()
 
         self.enable_root_login()
-
-        # ensure we have no module in our pam config already
-        # arch has faillock enabled by default
-        if m.image != "arch":
-            m.execute(f"! grep -r '{module}' /etc/pam.d")
-
-        # add it to the pam config
-        if m.image.startswith('debian-') or m.image.startswith('ubuntu'):
-            # enable pam_faillock.  see example in pam_faillock(8)
-            self.sed_file(r"/fallback if no module succeeds/ s/^/"
-                          r"auth [default=die] pam_faillock.so authfail deny=4\n"
-                          r"auth sufficient pam_faillock.so authsucc deny=4\n/",
-                          "/etc/pam.d/common-auth")
-        elif m.image == "arch":
-            self.sed_file("s/# deny = 3/deny = 4/", "/etc/security/faillock.conf")
-        else:
-            # see https://access.redhat.com/solutions/62949
-            self.sed_file("""/pam_unix/ {
-                      s/sufficient/[success=1 default=ignore]/\n
-                      aauth [default=die] pam_faillock.so authfail audit deny=4 unlock_time=600\n
-                      aauth sufficient pam_faillock.so authsucc audit deny=4 unlock_time=600\n
-                      }""", "/etc/pam.d/password-auth")
-
-        m.execute(f"grep -r '{module}' /etc/pam.d")
+        self.enable_faillock(4)
 
         m.start_cockpit()
 
@@ -763,6 +770,44 @@ account    required     pam_succeed_if.so user ingroup %s""" % m.get_admin_group
 
         self.allow_journal_messages(".*[aA]ccount .*locked due to .* failed logins.*")
         self.allow_journal_messages(".*minutes left to unlock.*")
+
+    @testlib.skipWsContainer("no local config with cockpit/ws container")
+    def testAutomaticSudoFaillock(self):
+        m = self.machine
+        b = self.browser
+
+        # only tolerate one failure; unfortunately sending no password (the second time) counts as second failure
+        self.enable_faillock(3)
+        self.addCleanup(m.execute, "faillock --user admin --reset")
+        # configure the account to force a password change
+        m.execute("chage -d 0 admin")
+        m.start_cockpit()
+        b.open("/")
+        b.try_login()
+
+        # set new password
+        new_pass = "fooBetterBar1@#"
+        if m.ws_container:
+            b.wait_in_text("#conversation-prompt", "You are required to change your password")
+        else:
+            b.wait_in_text("#conversation-message", "You are required to change your password")
+        b.set_val('#conversation-input', 'foobar')
+        b.click('#login-button')
+        b.wait_in_text("#conversation-prompt", "New password")
+        b.set_val('#conversation-input', new_pass)
+        b.click('#login-button')
+        b.wait_in_text("#conversation-prompt", "Retype")
+        b.set_val('#conversation-input', new_pass)
+        b.click('#login-button')
+        b.wait_visible('#content')
+        # automatic sudo will still try the old password
+        b.check_superuser_indicator("Limited access")
+        b.logout()
+
+        # can now login with new password and sudo, account isn't locked
+        b.login_and_go(password=new_pass)
+        b.check_superuser_indicator("Administrative access")
+        b.logout()
 
     @testlib.skipWsContainer("root logins disabled by default with ssh")
     def testPamAccess(self):
@@ -856,6 +901,8 @@ matchrule = <SUBJECT>^DC=LAN,DC=COCKPIT,CN=alice$
         # it into the browser.
 
         def do_test(authopts, expected, not_expected=None, session_leader=None):
+            # avoid running into start-limit-hit
+            m.execute("systemctl reset-failed")
             m.start_cockpit(tls=True)
             output = m.execute(['curl', '-ksS', '-D-', *authopts, 'https://localhost:9090/cockpit/login'])
             for s in expected:
@@ -1105,6 +1152,27 @@ matchrule = <SUBJECT>^DC=LAN,DC=COCKPIT,CN=alice$
         b.click("#login-button.pf-m-danger")
         check_session()
         check_store_hostkey(real_hostkey)
+
+    @testlib.skipOstree("No NFS server")
+    def testNFSHomeDir(self):
+        m = self.machine
+
+        # set up admin's home dir on NFS
+        self.restore_dir("/srv")
+        m.execute("mkdir -p /srv/nfshome/admin; chown admin:admin /srv/nfshome/admin")
+        self.write_file("/etc/exports", "/srv/nfshome 127.0.0.0/24(rw)\n",
+                        post_restore_action="systemctl restart nfs-server")
+        m.execute("systemctl restart nfs-server")
+        m.execute("mount 127.0.0.1:/srv/nfshome/admin /home/admin")
+        self.addCleanup(m.execute, "until umount /home/admin; do sleep 1; done")
+
+        self.login_and_go()
+
+        self.assertIn("admin", m.execute("loginctl --no-legend list-sessions"))
+        self.browser.logout()
+
+        # cleans up session
+        m.execute("while loginctl --no-legend list-sessions | grep admin; do sleep 1; done")
 
 
 if __name__ == '__main__':

@@ -15,11 +15,11 @@ window.cockpit_po = {
  ],
  "$0 error": [
   null,
-  "$0 erro"
+  "Erro $0"
  ],
  "$0 exited with code $1": [
   null,
-  "$0 saiu com o código $1"
+  "$0 foi encerrado com o código $1"
  ],
  "$0 failed": [
   null,
@@ -40,7 +40,7 @@ window.cockpit_po = {
  ],
  "$0 killed with signal $1": [
   null,
-  "$0 mortos com sinal $1"
+  "$0 morto com sinal $1"
  ],
  "$0 minute": [
   null,
@@ -76,7 +76,7 @@ window.cockpit_po = {
  ],
  "1 minute": [
   null,
-  "1 Minuto"
+  "1 minuto"
  ],
  "1 week": [
   null,
@@ -84,11 +84,11 @@ window.cockpit_po = {
  ],
  "20 minutes": [
   null,
-  "20 Minutos"
+  "20 minutos"
  ],
  "40 minutes": [
   null,
-  "40 Minutos"
+  "40 minutos"
  ],
  "5 minutes": [
   null,
@@ -100,7 +100,7 @@ window.cockpit_po = {
  ],
  "60 minutes": [
   null,
-  "60 Minutos"
+  "60 minutos"
  ],
  "A compatible version of Cockpit is not installed on $0.": [
   null,
@@ -110,6 +110,10 @@ window.cockpit_po = {
   null,
   "Um navegador moderno é necessário para segurança, confiabilidade e desempenho."
  ],
+ "A new SSH key at $0 will be created for $1 on $2 and it will be added to the $3 file of $4 on $5.": [
+  null,
+  "Uma nova chave SSH em $0 será criada por $1 em $2 e será adicionada ao arquivo $3 de $4 em $5."
+ ],
  "Absent": [
   null,
   "Ausente"
@@ -117,6 +121,10 @@ window.cockpit_po = {
  "Accept key and log in": [
   null,
   "Aceitar a chave e entrar"
+ ],
+ "Acceptable password": [
+  null,
+  "Senha aceitável"
  ],
  "Add $0": [
   null,
@@ -132,7 +140,11 @@ window.cockpit_po = {
  ],
  "Advanced TCA": [
   null,
-  "TCA Avançado"
+  "TCA avançado"
+ ],
+ "All-in-one": [
+  null,
+  "All-in-one"
  ],
  "Ansible": [
   null,
@@ -148,7 +160,7 @@ window.cockpit_po = {
  ],
  "Authentication failed": [
   null,
-  "Falha na Autenticação"
+  "Falha na autenticação"
  ],
  "Authentication is required to perform privileged tasks with the Cockpit Web Console": [
   null,
@@ -162,6 +174,10 @@ window.cockpit_po = {
   null,
   "Usando automaticamente o NTP"
  ],
+ "Automatically using additional NTP servers": [
+  null,
+  "Usando automaticamente servidores NTP adicionais"
+ ],
  "Automatically using specific NTP servers": [
   null,
   "Usando automaticamente servidores NTP específicos"
@@ -174,9 +190,17 @@ window.cockpit_po = {
   null,
   "Blade"
  ],
+ "Blade enclosure": [
+  null,
+  "Invólucro da lâmina"
+ ],
  "Bus expansion chassis": [
   null,
   "Chassi de Expansão de Barramento"
+ ],
+ "Bypass browser check": [
+  null,
+  "Contornar a verificação do navegador"
  ],
  "Cancel": [
   null,
@@ -206,6 +230,10 @@ window.cockpit_po = {
   null,
   "Verificando o software instalado"
  ],
+ "Clear input value": [
+  null,
+  "Limpar valor inserido"
+ ],
  "Close": [
   null,
   "Fechar"
@@ -220,7 +248,7 @@ window.cockpit_po = {
  ],
  "Cockpit configuration of NetworkManager and Firewalld": [
   null,
-  ""
+  "Configuração do cockpit do NetworkManager e Firewalld"
  ],
  "Cockpit could not contact the given host.": [
   null,
@@ -248,11 +276,15 @@ window.cockpit_po = {
  ],
  "Cockpit might not render correctly in your browser": [
   null,
-  ""
+  "O cockpit pode não ser renderizado corretamente no seu navegador"
  ],
  "Collect and package diagnostic and support data": [
   null,
-  ""
+  "Coletar e empacotar dados de diagnóstico e suporte"
+ ],
+ "Collect kernel crash dumps": [
+  null,
+  "Coletar despejos de travamento de kernel"
  ],
  "Compact PCI": [
   null,
@@ -280,7 +312,7 @@ window.cockpit_po = {
  ],
  "Copied": [
   null,
-  ""
+  "Copiado"
  ],
  "Copy": [
   null,
@@ -290,13 +322,17 @@ window.cockpit_po = {
   null,
   "Copiar para área de transferência"
  ],
+ "Create $0": [
+  null,
+  "Criar $0"
+ ],
  "Create a new SSH key and authorize it": [
   null,
-  ""
+  "Criar uma nova chave SSH e autorizá-la"
  ],
  "Create new task file with this content.": [
   null,
-  ""
+  "Crie um novo arquivo de tarefa com esse conteúdo."
  ],
  "Ctrl+Insert": [
   null,
@@ -332,11 +368,11 @@ window.cockpit_po = {
  ],
  "Dual rank": [
   null,
-  ""
+  "Dual rank"
  ],
  "Embedded PC": [
   null,
-  ""
+  "PC integrado"
  ],
  "Excellent password": [
   null,
@@ -350,33 +386,61 @@ window.cockpit_po = {
   null,
   "Falha ao mudar senha"
  ],
+ "Failed to enable $0 in firewalld": [
+  null,
+  "Falha ao habilitar $0 no firewalld"
+ ],
  "Go to now": [
   null,
   "Ir para agora"
+ ],
+ "Handheld": [
+  null,
+  "Dispositivo portátil"
+ ],
+ "Hide confirmation password": [
+  null,
+  "Ocultar confirmação da senha"
+ ],
+ "Hide password": [
+  null,
+  "Ocultar senha"
+ ],
+ "Host is unknown": [
+  null,
+  "Host é desconhecido"
  ],
  "Host key is incorrect": [
   null,
   "Chave de Host incorreta"
  ],
+ "Hostkey does not match": [
+  null,
+  "A chave do host não coincide"
+ ],
+ "Hostkey is unknown": [
+  null,
+  "Chave do host desconhecida"
+ ],
  "If the fingerprint matches, click \"Accept key and log in\". Otherwise, do not log in and contact your administrator.": [
   null,
-  ""
+  "Se deixado em branco, o ID será gerado com base nos serviços de porta e números de porta associados."
  ],
  "If the fingerprint matches, click 'Trust and add host'. Otherwise, do not connect and contact your administrator.": [
   null,
-  ""
+  "Se a impressão digital corresponder, clique em \"Confiar e adicionar host\". Caso contrário, não se conecte e entre em contato com o administrador."
  ],
  "Install": [
   null,
-  "Instale"
+  "Instalar"
  ],
  "Install software": [
   null,
-  "Instale Software"
+  "Instalar o software"
  ],
  "Install the cockpit-system package (and optionally other cockpit packages) on $0 to enable web console access.": [
   null,
-  ""
+  "Instalar o pacote cockpit-system (e opcionalmente outros pacotes cockpit) em $0 para habilitar o acesso ao console web."
  ],
  "Installing $0": [
   null,
@@ -389,6 +453,10 @@ window.cockpit_po = {
  "Internal error: Invalid challenge header": [
   null,
   "Erro interno: Cabeçalho de desafio inválido"
+ ],
+ "Internal protocol error": [
+  null,
+  "Erro de protocolo interno"
  ],
  "Invalid date format": [
   null,
@@ -416,7 +484,7 @@ window.cockpit_po = {
  ],
  "Kernel dump": [
   null,
-  "Dump do Kernel"
+  "Dump do kernel"
  ],
  "Key password": [
   null,
@@ -438,6 +506,10 @@ window.cockpit_po = {
   null,
   "Entrar"
  ],
+ "Log in to $0": [
+  null,
+  "Iniciar sessão para $0"
+ ],
  "Log in with your server user account.": [
   null,
   "Faça o login com sua conta de usuário do servidor."
@@ -445,6 +517,10 @@ window.cockpit_po = {
  "Log messages": [
   null,
   "Mensagens de Log"
+ ],
+ "Login": [
+  null,
+  "Iniciar sessão"
  ],
  "Login again": [
   null,
@@ -470,6 +546,10 @@ window.cockpit_po = {
   null,
   "Chassi do Servidor Principal"
  ],
+ "Manage storage": [
+  null,
+  "Gerenciar armazenamento"
+ ],
  "Manually": [
   null,
   "Manualmente"
@@ -484,7 +564,7 @@ window.cockpit_po = {
  ],
  "Mini tower": [
   null,
-  "Mini Torre"
+  "Mini torre"
  ],
  "Multi-system chassis": [
   null,
@@ -610,6 +690,10 @@ window.cockpit_po = {
   null,
   ""
  ],
+ "Pizza box": [
+  null,
+  "Servidor compacto"
+ ],
  "Please enable JavaScript to use the Web Console.": [
   null,
   ""
@@ -633,6 +717,14 @@ window.cockpit_po = {
  "Prompting via ssh-keygen timed out": [
   null,
   "Solicitação via ssh-keygen expirou"
+ ],
+ "RAID chassis": [
+  null,
+  "Chassis do RAID"
+ ],
+ "Rack mount chassis": [
+  null,
+  "Chassis de montagem do Rack"
  ],
  "Reboot": [
   null,
@@ -670,6 +762,10 @@ window.cockpit_po = {
   null,
   "Servidor"
  ],
+ "Server closed connection": [
+  null,
+  "O servidor encerrou a conexão"
+ ],
  "Server has closed the connection.": [
   null,
   "O servidor encerrou a conexão."
@@ -685,6 +781,10 @@ window.cockpit_po = {
  "Shift+Insert": [
   null,
   "Shift+Insert"
+ ],
+ "Show password": [
+  null,
+  "Exibir senha"
  ],
  "Shut down": [
   null,
@@ -710,9 +810,21 @@ window.cockpit_po = {
   null,
   "Armazenamento"
  ],
+ "Sub-Chassis": [
+  null,
+  "Sub chassis"
+ ],
+ "Sub-Notebook": [
+  null,
+  "Sub notebook"
+ ],
  "Synchronized": [
   null,
   "Sincronizado"
+ ],
+ "Synchronized with $0": [
+  null,
+  "Sincronizado com $0"
  ],
  "Synchronizing": [
   null,
@@ -738,6 +850,10 @@ window.cockpit_po = {
   null,
   ""
  ],
+ "The fingerprint should match:": [
+  null,
+  "A impressão digital deve corresponder a:"
+ ],
  "The key password can not be empty": [
   null,
   "A senha da chave não pode estar vazia"
@@ -750,13 +866,17 @@ window.cockpit_po = {
   null,
   ""
  ],
+ "The password can not be empty": [
+  null,
+  "A senha não pode estar vazia"
+ ],
  "The resulting fingerprint is fine to share via public methods, including email.": [
   null,
-  ""
+  "A impressão digital resultante pode ser compartilhada por métodos públicos, incluindo e-mail."
  ],
  "The resulting fingerprint is fine to share via public methods, including email. If you are asking someone else to do the verification for you, they can send the results using any method.": [
   null,
-  ""
+  "A impressão digital resultante pode ser compartilhada por métodos públicos, incluindo e-mail. Se você estiver pedindo para outra pessoa fazer a verificação para você, ela pode enviar os resultados usando qualquer método."
  ],
  "The server refused to authenticate '$0' using password authentication, and no other supported authentication methods are available.": [
   null,
@@ -772,23 +892,23 @@ window.cockpit_po = {
  ],
  "This tool configures the SELinux policy and can help with understanding and resolving policy violations.": [
   null,
-  ""
+  "Esta ferramenta configura a política do SELinux e pode ajudar a entender e resolver violações de política."
  ],
  "This tool configures the system to write kernel crash dumps. It supports the \"local\" (disk), \"ssh\", and \"nfs\" dump targets.": [
   null,
-  ""
+  "Esta ferramenta configura o sistema para escrever kernel crash dumps. Ela suporta os alvos de dump \"local\" (disco), \"ssh\" e \"nfs\"."
  ],
  "This tool generates an archive of configuration and diagnostic information from the running system. The archive may be stored locally or centrally for recording or tracking purposes or may be sent to technical support representatives, developers or system administrators to assist with technical fault-finding and debugging.": [
   null,
-  ""
+  "Esta ferramenta gera um arquivo de informações de configuração e diagnóstico do sistema em execução. O arquivo pode ser armazenado localmente ou centralmente para fins de registro ou rastreamento ou pode ser enviado a representantes de suporte técnico, desenvolvedores ou administradores de sistema para auxiliar na detecção de falhas técnicas e depuração."
  ],
  "This tool manages local storage, such as filesystems, LVM2 volume groups, and NFS mounts.": [
   null,
-  ""
+  "Esta ferramenta gerencia armazenamento local, como sistemas de arquivos, grupos de volumes LVM2 e montagens NFS."
  ],
  "This tool manages networking such as bonds, bridges, teams, VLANs and firewalls using NetworkManager and Firewalld. NetworkManager is incompatible with Ubuntu's default systemd-networkd and Debian's ifupdown scripts.": [
   null,
-  ""
+  "Esta ferramenta gerencia redes como vínculos, pontes, times, VLANs e firewalls usando NetworkManager e Firewalld. O NetworkManager é incompatível com o systemd-networkd padrão do Ubuntu e os scripts ifupdown do Debian."
  ],
  "Time zone": [
   null,
@@ -796,11 +916,11 @@ window.cockpit_po = {
  ],
  "To ensure that your connection is not intercepted by a malicious third-party, please verify the host key fingerprint:": [
   null,
-  ""
+  "Para garantir que sua conexão não seja interceptada por terceiros mal-intencionados, verifique a impressão digital da chave do host:"
  ],
  "To verify a fingerprint, run the following on $0 while physically sitting at the machine or through a trusted network:": [
   null,
-  ""
+  "Para verificar uma impressão digital, execute o seguinte em $0 enquanto estiver fisicamente sentado na máquina ou por meio de uma rede confiável:"
  ],
  "Toggle date picker": [
   null,
@@ -818,9 +938,9 @@ window.cockpit_po = {
   null,
   "Torre"
  ],
- "Transient packageless sessions require the same operating system and version, for compatibility reasons: $0.": [
+ "Trust and add host": [
   null,
-  ""
+  "Confiar e adicionar host"
  ],
  "Try again": [
   null,
@@ -846,6 +966,10 @@ window.cockpit_po = {
   null,
   "Desconhecido"
  ],
+ "Unknown host: $0": [
+  null,
+  "Host desconhecido: $0"
+ ],
  "Untrusted host": [
   null,
   "Host não confiável"
@@ -861,6 +985,10 @@ window.cockpit_po = {
  "Validating authentication token": [
   null,
   "Validando token de autenticação"
+ ],
+ "Verify fingerprint": [
+  null,
+  "Verificar digital"
  ],
  "View all logs": [
   null,
@@ -912,15 +1040,15 @@ window.cockpit_po = {
  ],
  "in less than a minute": [
   null,
-  ""
+  "em menos de um minuto"
  ],
  "less than a minute ago": [
   null,
-  ""
+  "menos de um minuto atrás"
  ],
  "password quality": [
   null,
-  ""
+  "qualidade da senha"
  ],
  "show less": [
   null,

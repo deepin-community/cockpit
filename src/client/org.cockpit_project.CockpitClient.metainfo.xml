@@ -4,7 +4,7 @@
 
   <name>Cockpit Client</name>
   <summary>Web-based server interface via ssh</summary>
-  <developer id='org.cockpit-project'>
+  <developer id="org.cockpit_project">
     <name>Cockpit Project</name>
   </developer>
 
@@ -36,7 +36,7 @@
   </screenshots>
 
   <releases>
-    <release version="328" date="2024-11-06"/>
+    <release version="337" date="2025-04-23"/>
   </releases>
 
   <launchable type="desktop-id">org.cockpit_project.CockpitClient.desktop</launchable>

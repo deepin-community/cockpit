@@ -25,8 +25,6 @@ import { Alert } from "@patternfly/react-core/dist/esm/components/Alert/index.js
 import { CardHeader, CardBody } from "@patternfly/react-core/dist/esm/components/Card/index.js";
 import { DescriptionList } from "@patternfly/react-core/dist/esm/components/DescriptionList/index.js";
 
-import { useObject } from "hooks";
-
 import { VolumeIcon } from "../icons/gnome-icons.jsx";
 import { StorageButton, StorageLink } from "../storage-controls.jsx";
 import {
@@ -273,41 +271,19 @@ export function make_lvm2_volume_group_page(parent, vgroup) {
     make_logical_volume_pages(vgroup_page, vgroup);
 }
 
-function vgroup_poller(vgroup) {
-    let timer = null;
-
-    if (vgroup.NeedsPolling) {
-        timer = window.setInterval(() => { vgroup.Poll() }, 2000);
-    }
-
-    function stop() {
-        if (timer)
-            window.clearInterval(timer);
-    }
-
-    return {
-        stop
-    };
-}
-
 const LVM2LogicalVolumesCard = ({ card, vgroup }) => {
     return (
         <StorageCard card={card}>
-            <CardBody className="contains-list">
-                <ChildrenTable emptyCaption={_("No logical volumes")}
-                               aria-label={_("LVM2 logical volumes")}
-                               page={card.page} />
-            </CardBody>
+            <ChildrenTable
+                emptyCaption={_("No logical volumes")}
+                aria-label={_("LVM2 logical volumes")}
+                page={card.page} />
         </StorageCard>
     );
 };
 
 const LVM2VolumeGroupCard = ({ card, vgroup }) => {
     const has_missing_pvs = vgroup.MissingPhysicalVolumes && vgroup.MissingPhysicalVolumes.length > 0;
-
-    useObject(() => vgroup_poller(vgroup),
-              poller => poller.stop(),
-              [vgroup]);
 
     function is_partial_linear_lvol(block) {
         const lvm2 = client.blocks_lvm2[block.path];
@@ -390,11 +366,10 @@ const LVM2VolumeGroupCard = ({ card, vgroup }) => {
                 </DescriptionList>
             </CardBody>
             <CardHeader><strong>{_("Physical volumes")}</strong></CardHeader>
-            <CardBody className="contains-list">
-                <PageTable emptyCaption={_("No physical volumes found")}
-                           aria-label={_("LVM2 physical volumes")}
-                           crossrefs={get_crossrefs(vgroup)} />
-            </CardBody>
+            <PageTable
+                emptyCaption={_("No physical volumes found")}
+                aria-label={_("LVM2 physical volumes")}
+                crossrefs={get_crossrefs(vgroup)} />
         </StorageCard>
     );
 };
